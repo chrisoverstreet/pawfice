@@ -6,9 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:start": "pnpm dlx supabase@latest --network-id pawfice-net start",
+    "db:generate": "mkdirp utils/supabase && pnpm dlx supabase@latest --network-id pawfice-net gen types typescript --local --schema public > utils/supabase/types.ts",
+    "db:dump": "pnpm dlx supabase@latest --network-id pawfice-net db dump --local --data-only --file=supabase/seed.sql",
+    "db:rest": "pnpm dlx supabase@latest --network-id pawfice-net db reset"
   },
   "dependencies": {
+    "@supabase/ssr": "^0.5.1",
+    "@supabase/supabase-js": "^2.46.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "lucide-react": "^0.456.0",
@@ -24,7 +30,12 @@
     "@types/react-dom": "^18",
     "eslint": "^9.14.0",
     "eslint-config-next": "^15.0.3",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "mkdirp": "^3.0.1",
     "postcss": "^8",
+    "prettier": "^3.3.3",
+    "prettier-plugin-organize-imports": "^4.1.0",
     "tailwindcss": "^3.4.1",
     "typescript": "^5"
   }
