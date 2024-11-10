@@ -10,13 +10,15 @@ export default async function Home() {
   } = await supabase.auth.getSession();
 
   return (
-    <div>
+    <div className='flex flex-col gap-8'>
       <h1>Home page</h1>
       {session?.user ? (
-        <div>
+        <>
           {session.user.email}
           <SignOutButton />
-        </div>
+          <Link href='/get-started'>Get started</Link>
+          <pre>{JSON.stringify(session, null, `\t`)}</pre>
+        </>
       ) : (
         <Link href='/login'>Sign in</Link>
       )}

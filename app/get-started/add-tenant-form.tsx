@@ -1,6 +1,6 @@
 'use client';
 
-import loginAction from '@/app/(auth)/login/login-action';
+import addTenantAction from '@/app/get-started/add-tenant-action';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -19,26 +19,23 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const schema = z.object({
-  email: z.string().email(),
-  // TODO better pw requirements
-  password: z.string(),
+  name: z.string().min(1),
 });
 
 type FormValues = z.infer<typeof schema>;
 
-export default function LoginForm() {
+export default function AddTenantForm() {
   const router = useRouter();
 
-  const { execute, hasSucceeded, isPending } = useAction(loginAction, {
-    onSuccess: () => router.replace('/'),
+  const { execute, hasSucceeded, isPending } = useAction(addTenantAction, {
+    onSuccess: () => router.push('/dashboard'),
     onError: ({ error }) =>
       toast.error(error.serverError || 'Unexpected error'),
   });
 
   const methods = useForm<FormValues>({
     defaultValues: {
-      email: '',
-      password: '',
+      name: '',
     },
     disabled: isPending || hasSucceeded,
     resolver: zodResolver(schema),
@@ -52,32 +49,23 @@ export default function LoginForm() {
       >
         <FormField
           control={methods.control}
-          name='email'
+          name='name'
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Business name</FormLabel>
               <FormControl>
-                <Input autoFocus inputMode='email' required {...field} />
+                <Input autoFocus required {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <FormField
-          control={methods.control}
-          name='password'
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Password</FormLabel>
-              <FormControl>
-                <Input required type='password' {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button loading={isPending} type='submit'>
-          Sign In
+        <Button
+          disabled={isPending || hasSucceeded}
+          loading={isPending}
+          type='submit'
+        >
+          Let&apos;s go!
         </Button>
       </form>
     </Form>

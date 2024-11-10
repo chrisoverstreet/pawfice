@@ -5,22 +5,10 @@ import { cookies } from 'next/headers';
 export async function getServerClient() {
   const cookieStore = await cookies();
 
-  const tenantId = cookieStore.get('tenant')?.value;
-
   return createServerClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
     {
-      global: {
-        fetch: async (input, init) => {
-          const headers = new Headers(init?.headers);
-          if (tenantId) {
-            headers.set('x-tenant', tenantId);
-          }
-
-          return fetch(input, { ...init, headers });
-        },
-      },
       cookies: {
         getAll() {
           return cookieStore.getAll();
