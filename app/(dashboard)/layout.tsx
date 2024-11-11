@@ -1,5 +1,7 @@
+import { NavUser } from '@/app/(dashboard)/nav-user';
 import {
   Sidebar,
+  SidebarContent,
   SidebarFooter,
   SidebarGroup,
   SidebarGroupContent,
@@ -60,24 +62,28 @@ export default async function DashboardLayout({
         <SidebarHeader>
           <SidebarMenuButton>{data.name}</SidebarMenuButton>
         </SidebarHeader>
-        <SidebarGroup>
-          <SidebarGroupLabel>Application</SidebarGroupLabel>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              {links.map((link) => (
-                <SidebarMenuItem key={link.title}>
-                  <SidebarMenuButton asChild>
-                    <a href={link.url}>
-                      <link.icon />
-                      <span>{link.title}</span>
-                    </a>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarFooter />
+        <SidebarContent>
+          <SidebarGroup>
+            <SidebarGroupLabel>Application</SidebarGroupLabel>
+            <SidebarGroupContent>
+              <SidebarMenu>
+                {links.map((link) => (
+                  <SidebarMenuItem key={link.title}>
+                    <SidebarMenuButton asChild>
+                      <a href={link.url}>
+                        <link.icon />
+                        <span>{link.title}</span>
+                      </a>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                ))}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        </SidebarContent>
+        <SidebarFooter>
+          <NavUser user={session.user} />
+        </SidebarFooter>
         <SidebarRail />
       </Sidebar>
       {children}
