@@ -16,7 +16,11 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: 'Pawfice',
+  title: {
+    default: 'Pawfice',
+    absolute: 'Pawfice',
+    template: '%s | Pawfice',
+  },
 };
 
 export default function RootLayout({

@@ -1,0 +1,15 @@
+services:
+  typesense:
+    image: typesense/typesense:27.1
+    restart: on-failure
+    ports:
+      - "8108:8108"
+    volumes:
+      - ./typesense-data:/data
+    command: '--data-dir /data --api-key=${TYPESENSE_API_KEY} --enable-cors'
+    networks:
+      - pawfice-net
+
+networks:
+  pawfice-net:
+    driver: bridge
