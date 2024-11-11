@@ -13,13 +13,13 @@ export default async function Page() {
         <Breadcrumb>
           <BreadcrumbList>
             <BreadcrumbItem>
-              <BreadcrumbPage>Home</BreadcrumbPage>
+              <BreadcrumbPage>People</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       }
     >
-      Dashboard
+      People
     </DashboardPage>
   );
 }

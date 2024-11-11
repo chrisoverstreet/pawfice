@@ -10,10 +10,9 @@ import {
   SidebarMenuItem,
   SidebarProvider,
   SidebarRail,
-  SidebarTrigger,
 } from '@/components/ui/sidebar';
 import { getServerClient } from '@/lib/supabase/get-server-client';
-import { Home } from 'lucide-react';
+import { Home, Users } from 'lucide-react';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -22,6 +21,11 @@ const links = [
     title: 'Home',
     url: '/dashboard',
     icon: Home,
+  },
+  {
+    title: 'People',
+    url: '/people',
+    icon: Users,
   },
 ] as const;
 
@@ -76,10 +80,7 @@ export default async function DashboardLayout({
         <SidebarFooter />
         <SidebarRail />
       </Sidebar>
-      <main>
-        <SidebarTrigger />
-        {children}
-      </main>
+      {children}
     </SidebarProvider>
   );
 }
