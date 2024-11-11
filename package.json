@@ -10,8 +10,8 @@
     "lint": "next lint",
     "db:start": "pnpm dlx supabase@latest --network-id pawfice-net start",
     "db:generate": "mkdirp utils/supabase && pnpm dlx supabase@latest --network-id pawfice-net gen types typescript --local --schema public > utils/supabase/types.ts",
-    "db:dump": "pnpm dlx supabase@latest --network-id pawfice-net db dump --local --data-only --file=supabase/seed.sql",
-    "db:rest": "pnpm dlx supabase@latest --network-id pawfice-net db reset",
+    "db:dump": "pnpm dlx supabase@latest db dump --local --data-only --file=supabase/seed.sql",
+    "db:reset": "pnpm dlx supabase@latest --network-id pawfice-net db reset",
     "typesense:start": "cd typesense && docker-compose --env-file ../.env.local up -d",
     "typesense:reset": "tsx --env-file .env.local typesense/reset.ts"
   },

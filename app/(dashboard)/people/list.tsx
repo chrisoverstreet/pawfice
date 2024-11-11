@@ -3,7 +3,7 @@
 import useQ from '@/app/(dashboard)/people/use-q';
 import useScopedSearchKey from '@/app/(dashboard)/people/use-scoped-search-key';
 import { Skeleton } from '@/components/ui/skeleton';
-import { userDocumentSchema } from '@/lib/typesense/document-schemas';
+import { tenantProfileDocumentSchema } from '@/lib/typesense/document-schemas';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -31,7 +31,7 @@ export default function List() {
         });
 
         return searchClient
-          .collections('users')
+          .collections('tenant_profiles')
           .documents()
           .search(
             {
@@ -84,7 +84,7 @@ export default function List() {
       z
         .array(
           z.object({
-            document: userDocumentSchema.omit({
+            document: tenantProfileDocumentSchema.omit({
               tenant_id: true,
             }),
           }),

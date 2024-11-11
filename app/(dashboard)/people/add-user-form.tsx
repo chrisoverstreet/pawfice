@@ -15,6 +15,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 import { useAction } from 'next-safe-action/hooks';
+import { useRouter } from 'next/navigation';
 import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -39,12 +40,17 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function AddUserForm() {
+  const router = useRouter();
+
   const [, setModal] = useModal();
 
   const { execute, hasSucceeded, isPending } = useAction(addUserAction, {
-    onSuccess: async () => {
-      // TODO redirect
+    onSuccess: async ({ data: id }) => {
       await setModal(null);
+      if (id) {
+        toast.success('Successfully added new user');
+        router.push(`/people/${id}`);
+      }
     },
     onError: ({ error }) =>
       toast.error(error.serverError || 'Unexpected error'),

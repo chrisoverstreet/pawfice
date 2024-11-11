@@ -1,5 +1,5 @@
 import { getAdminClient } from '@/lib/supabase/get-admin-client';
-import { userDocumentSchema } from '@/lib/typesense/document-schemas';
+import { tenantProfileDocumentSchema } from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
 import formatDateForIndexing from '@/utils/typesense/format-date-for-indexing';
 import formatPhoneNumberForIndexing from '@/utils/typesense/format-phone-for-indexing';
@@ -23,59 +23,70 @@ async function reset() {
   }
 
   await typesense.collections().create({
-    name: 'users',
+    name: 'tenant_profiles',
     enable_nested_fields: true,
     fields: [
       { name: 'avatar_url', type: 'string', optional: true, index: false },
       { name: 'created_at', type: 'int32', index: false },
       { name: 'email', type: 'string', optional: true },
+      { name: 'first_name', type: 'string' },
       { name: 'id', type: 'string' },
+      { name: 'initials', type: 'string', index: false },
+      { name: 'last_name', type: 'string', optional: true },
       { name: 'name', type: 'string', optional: true },
       { name: 'phone', type: 'string[]', optional: true },
       { name: 'role', type: 'string', facet: true },
       { name: 'tenant_id', type: 'string' },
+      { name: 'user_id', type: 'string', optional: true },
     ],
     token_separators: ['(', ')', '-', '+', '@', '.'],
   });
 
   const supabase = getAdminClient();
 
-  const usersSearchKey = await typesense.keys().create({
+  const tenantProfilesSearchKey = await typesense.keys().create({
     actions: ['documents:search'],
-    collections: ['users'],
+    collections: ['tenant_profiles'],
     // TODO
     // expires_at: expiresAt,
-    description: 'Users search key',
+    description: 'Tenant profiles search key',
   });
-  invariant(usersSearchKey.value, 'Failed to create users search key');
+  invariant(tenantProfilesSearchKey.value, 'Failed to create users search key');
+
+  console.log(`tenantProfilesSearchKey: `, tenantProfilesSearchKey);
 
   const userInserts = await supabase
-    .from('tenant_users')
+    .from('tenant_profiles')
     .select('*, users(*)')
     .then(
       ({ data }) =>
         data?.map(
           (tu) =>
             ({
-              avatar_url: undefined,
+              avatar_url: tu.avatar_url,
               created_at: formatDateForIndexing(tu.created_at),
-              email: tu.users!.email,
-              id: tu.users!.id,
-              name: tu.users!.first_name!,
-              phone: tu.users!.phone
-                ? formatPhoneNumberForIndexing(tu.users!.phone)
+              email: tu.users?.email,
+              first_name: tu.first_name,
+              id: tu.id,
+              initials: tu.initials,
+              last_name: tu.last_name,
+              name: tu.name,
+              phone: tu.users?.phone
+                ? formatPhoneNumberForIndexing(tu.users.phone)
                 : undefined,
               role: tu.role,
               tenant_id: tu.tenant_id,
-            }) satisfies z.infer<typeof userDocumentSchema>,
+              userId: tu.user_id,
+            }) satisfies z.infer<typeof tenantProfileDocumentSchema>,
         ) ?? [],
     );
 
   if (userInserts.length) {
     await typesense
-      .collections('users')
+      .collections('tenant_profiles')
       .documents()
-      .import(userInserts, { action: 'create' });
+      .import(userInserts, { action: 'create', return_id: true })
+      .then(console.log);
   }
 }
 

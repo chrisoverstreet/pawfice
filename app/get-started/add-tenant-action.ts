@@ -35,8 +35,11 @@ const addTenantAction = actionClient
     const supabaseAdmin = getAdminClient();
 
     const { data: tenantUserData, error: tenantUserError } = await supabaseAdmin
-      .from('tenant_users')
+      .from('tenant_profiles')
       .insert({
+        avatar_url: user.user_metadata.avatar_url,
+        first_name: user.app_metadata.first_name || 'Unknown',
+        last_name: user.app_metadata.last_name,
         role: 'owner',
         tenant_id: tenantData.id,
         user_id: user.id,

@@ -4,8 +4,8 @@ import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
 
-// TODO
-const USERS_SEARCH_KEY = 'g3v0eG9ReevwbWboRq9Fplxu9w72kAoZ';
+// TODO - remove hardcoded value and rotate
+const TENANT_PROFILES_SEARCH_KEY = 'INpUpyzd99B55Je50taOcPVlFsjVQqxC';
 
 const getScopedSearchKeyAction = actionClient.action(async () => {
   const supabase = await getServerClient();
@@ -18,11 +18,13 @@ const getScopedSearchKeyAction = actionClient.action(async () => {
 
   const typesenseClient = getTypesenseAdminClient();
 
-  return typesenseClient.keys().generateScopedSearchKey(USERS_SEARCH_KEY, {
-    expires_at:
-      parseInt((new Date().getTime() / 1000).toFixed(0), 10) + 60 * 60,
-    filter_by: `tenant_id:=${tenantId}`,
-  });
+  return typesenseClient
+    .keys()
+    .generateScopedSearchKey(TENANT_PROFILES_SEARCH_KEY, {
+      expires_at:
+        parseInt((new Date().getTime() / 1000).toFixed(0), 10) + 60 * 60,
+      filter_by: `tenant_id:=${tenantId}`,
+    });
 });
 
 export default getScopedSearchKeyAction;

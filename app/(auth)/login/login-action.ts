@@ -31,7 +31,7 @@ const loginAction = actionClient
 
     if (session?.user) {
       const { data: tenantUsersData } = await supabase
-        .from('tenant_users')
+        .from('tenant_profiles')
         .select('tenant_id, role')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
