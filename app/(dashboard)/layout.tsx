@@ -15,6 +15,7 @@ import {
 } from '@/components/ui/sidebar';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import { Home, Users } from 'lucide-react';
+import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
 
@@ -70,10 +71,10 @@ export default async function DashboardLayout({
                 {links.map((link) => (
                   <SidebarMenuItem key={link.title}>
                     <SidebarMenuButton asChild>
-                      <a href={link.url}>
+                      <Link href={link.url}>
                         <link.icon />
                         <span>{link.title}</span>
-                      </a>
+                      </Link>
                     </SidebarMenuButton>
                   </SidebarMenuItem>
                 ))}

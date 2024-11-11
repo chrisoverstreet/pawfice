@@ -49,8 +49,6 @@ async function reset() {
   });
   invariant(usersSearchKey.value, 'Failed to create users search key');
 
-  console.log('Users search key:', usersSearchKey.value);
-
   const userInserts = await supabase
     .from('tenant_users')
     .select('*, users(*)')
@@ -73,14 +71,11 @@ async function reset() {
         ) ?? [],
     );
 
-  console.log({ userInserts });
-
   if (userInserts.length) {
     await typesense
       .collections('users')
       .documents()
-      .import(userInserts, { action: 'create', return_id: true })
-      .then(console.log);
+      .import(userInserts, { action: 'create' });
   }
 }
 

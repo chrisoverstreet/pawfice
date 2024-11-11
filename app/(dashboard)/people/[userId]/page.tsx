@@ -32,7 +32,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: data.first_name,
+    title: `${data.first_name} | Pawfice`,
   };
 }
 

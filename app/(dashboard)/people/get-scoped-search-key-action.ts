@@ -12,8 +12,6 @@ const getScopedSearchKeyAction = actionClient.action(async () => {
 
   const { data: tenantId, error } = await supabase.rpc('tenant_id').single();
 
-  console.log({ tenantId, error });
-
   if (error) {
     throw error;
   }
