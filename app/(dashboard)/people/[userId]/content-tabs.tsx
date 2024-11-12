@@ -16,11 +16,12 @@ export default function ContentTabs({ data }: { data: PageData }) {
 
   return (
     <Tabs
+      className='w-full sm:w-auto'
       defaultValue={tab}
       onValueChange={(val) => setTab(z.enum(['profile', 'pets']).parse(val))}
       value={tab}
     >
-      <TabsList className='mb-4'>
+      <TabsList className='mb-4 grid w-full grid-cols-2 sm:w-auto sm:inline-grid'>
         <TabsTrigger value='profile' className='flex items-center space-x-2'>
           <User className='w-4 h-4' />
           <span>Profile</span>
@@ -31,7 +32,7 @@ export default function ContentTabs({ data }: { data: PageData }) {
         </TabsTrigger>
       </TabsList>
       <TabsContent value='profile'>
-        <AdminUserInfo />
+        <AdminUserInfo data={data} />
       </TabsContent>
       <TabsContent value='pets'>
         <PetGrid pets={data.pets} />
