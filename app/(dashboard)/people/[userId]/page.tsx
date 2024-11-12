@@ -80,12 +80,12 @@ export async function generateStaticParams() {
   const supabaseAdmin = getAdminClient();
 
   return supabaseAdmin
-    .from('users')
+    .from('tenant_profiles')
     .select('id')
     .then(
       ({ data }) =>
-        data?.map((u) => ({
-          userId: u.id,
+        data?.map((tp) => ({
+          userId: tp.id,
         })) ?? [],
     );
 }

@@ -80,7 +80,7 @@ export async function generateStaticParams() {
   const supabaseAdmin = getAdminClient();
 
   return supabaseAdmin
-    .from('users')
+    .from('pets')
     .select('id')
     .then(
       ({ data }) =>
