@@ -4,8 +4,6 @@ import {
   tenantProfileDocumentSchema,
 } from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
-import formatDateForIndexing from '@/utils/typesense/format-date-for-indexing';
-import formatPhoneNumberForIndexing from '@/utils/typesense/format-phone-for-indexing';
 import invariant from 'invariant';
 import { z } from 'zod';
 
@@ -47,6 +45,7 @@ async function reset() {
 
   await typesense.collections().create({
     name: 'tenant_profiles',
+    enable_nested_fields: true,
     fields: [
       { name: 'avatar_url', type: 'string', optional: true, index: false },
       { name: 'created_at', type: 'int32', index: false },
@@ -60,6 +59,10 @@ async function reset() {
       { name: 'role', type: 'string', facet: true },
       { name: 'tenant_id', type: 'string' },
       { name: 'user_id', type: 'string', optional: true },
+      { name: 'pets', type: 'object[]', optional: true },
+      { name: 'pets.avatar_url', type: 'string', optional: true, index: false },
+      { name: 'pets.id', type: 'string[]', optional: true },
+      { name: 'pets.name', type: 'string[]', optional: true },
     ],
     token_separators: ['(', ')', '-', '+', '@', '.'],
   });
@@ -92,30 +95,8 @@ async function reset() {
   });
 
   const tenantProfileInserts = await supabase
-    .from('tenant_profiles')
-    .select('*, users(*)')
-    .then(
-      ({ data }) =>
-        data?.map(
-          (tu) =>
-            ({
-              avatar_url: tu.avatar_url,
-              created_at: formatDateForIndexing(tu.created_at),
-              email: tu.users?.email,
-              first_name: tu.first_name,
-              id: tu.id,
-              initials: tu.initials,
-              last_name: tu.last_name,
-              name: tu.name,
-              phone: tu.users?.phone
-                ? formatPhoneNumberForIndexing(tu.users.phone)
-                : undefined,
-              role: tu.role,
-              tenant_id: tu.tenant_id,
-              userId: tu.user_id,
-            }) satisfies z.infer<typeof tenantProfileDocumentSchema>,
-        ) ?? [],
-    );
+    .rpc('get_tenant_profiles_for_typesense')
+    .then(({ data }) => z.array(tenantProfileDocumentSchema).parse(data));
 
   if (tenantProfileInserts.length) {
     await typesense

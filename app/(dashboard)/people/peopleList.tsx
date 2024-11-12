@@ -13,7 +13,7 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 export default function PeopleList() {
-  const searchKey = useScopedSearchKey('zKym5NXbmVMbFjWNGtfIW8CjZ1zAXvke');
+  const searchKey = useScopedSearchKey('fG4oXT3JcogFL3eD8gqQfrHJvHC8Fd0U');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
@@ -36,7 +36,7 @@ export default function PeopleList() {
           .search(
             {
               q: debouncedQ,
-              query_by: ['name', 'email', 'phone'],
+              query_by: ['name', 'email', 'phone', 'pets.name'],
               facet_by: ['role'],
               page: pageParam,
             },

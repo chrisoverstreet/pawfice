@@ -244,6 +244,77 @@ end;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.get_pet_for_typesense(p_pet_id text)
+ RETURNS json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+declare
+    v_tenant_id text;
+    v_result json;
+begin
+    -- Get the tenant_id for the pet
+    select tenant_id into v_tenant_id
+    from pets
+    where id = p_pet_id;
+
+    -- Check if pet exists
+    if v_tenant_id is null then
+        raise exception 'Pet not found';
+    end if;
+
+    -- Check if the caller has access to this tenant
+    if not exists (
+        select 1
+        from tenant_profiles
+        where tenant_id = v_tenant_id
+        and user_id = auth.uid()
+    ) then
+        raise exception 'Access denied';
+    end if;
+
+    -- Get pet data
+    WITH pet_data AS (
+      SELECT
+        p.id,
+        p.avatar_url,
+        EXTRACT(EPOCH FROM p.created_at)::integer as created_at,
+        p.name,
+        p.tenant_id,
+        -- Aggregate parent information into an array of objects
+        COALESCE(
+          jsonb_agg(
+            jsonb_build_object(
+              'avatar_url', tp.avatar_url,
+              'id', tp.id,
+              'name', tp.name
+            )
+            ORDER BY tp.name
+          ) FILTER (WHERE tp.id IS NOT NULL),
+          '[]'::jsonb
+        ) as parents
+      FROM pets p
+      -- Join with pet_parents to get parent relationships
+      LEFT JOIN pet_parents pp ON p.id = pp.pet_id AND p.tenant_id = pp.tenant_id
+      -- Join with tenant_profiles to get parent details
+      LEFT JOIN tenant_profiles tp ON pp.tenant_profile_id = tp.id AND pp.tenant_id = tp.tenant_id
+      WHERE p.id = p_pet_id
+      GROUP BY p.id, p.avatar_url, p.created_at, p.name, p.tenant_id
+    )
+    SELECT row_to_json(pet_data)::json
+    INTO v_result
+    FROM pet_data;
+
+    -- Check if we got any results
+    if v_result is null then
+        raise exception 'Failed to generate pet data';
+    end if;
+
+    return v_result;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.get_pets_for_typesense()
  RETURNS SETOF json
  LANGUAGE plpgsql
@@ -279,6 +350,158 @@ begin
     )
     SELECT row_to_json(pet_data)::json
     FROM pet_data;
+end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.get_tenant_profile_for_typesense(p_tenant_profile_id text)
+ RETURNS json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+declare
+    v_tenant_id text;
+    v_result json;
+begin
+    -- Get the tenant_id for the profile
+    select tenant_id into v_tenant_id
+    from tenant_profiles
+    where id = p_tenant_profile_id;
+
+    -- Check if profile exists
+    if v_tenant_id is null then
+        raise exception 'Tenant profile not found';
+    end if;
+
+    -- Check if the caller has access to this tenant
+    if not exists (
+        select 1
+        from tenant_profiles
+        where tenant_id = v_tenant_id
+        and user_id = auth.uid()
+    ) then
+        raise exception 'Access denied';
+    end if;
+
+    -- Get profile data
+    WITH profile_data AS (
+        SELECT
+            tp.id,
+            tp.avatar_url,
+            EXTRACT(EPOCH FROM tp.created_at)::integer as created_at,
+            u.email,
+            tp.first_name,
+            tp.initials,
+            tp.last_name,
+            tp.name,
+            ARRAY_REMOVE(ARRAY[u.phone], NULL) as phone,
+            tp.role::text,
+            tp.tenant_id,
+            tp.user_id::text,
+            -- Aggregate pet information into an array of objects
+            COALESCE(
+                jsonb_agg(
+                    jsonb_build_object(
+                        'avatar_url', p.avatar_url,
+                        'id', p.id,
+                        'name', p.name
+                    )
+                    ORDER BY p.name
+                ) FILTER (WHERE p.id IS NOT NULL),
+                '[]'::jsonb
+            ) as pets
+        FROM tenant_profiles tp
+        -- Join with users to get email and phone
+        LEFT JOIN users u ON tp.user_id = u.id
+        -- Join with pet_parents to get pet relationships
+        LEFT JOIN pet_parents pp ON tp.id = pp.tenant_profile_id AND tp.tenant_id = pp.tenant_id
+        -- Join with pets to get pet details
+        LEFT JOIN pets p ON pp.pet_id = p.id AND pp.tenant_id = p.tenant_id
+        WHERE tp.id = p_tenant_profile_id
+        GROUP BY
+            tp.id,
+            tp.avatar_url,
+            tp.created_at,
+            u.email,
+            tp.first_name,
+            tp.initials,
+            tp.last_name,
+            tp.name,
+            u.phone,
+            tp.role,
+            tp.tenant_id,
+            tp.user_id
+    )
+    SELECT row_to_json(profile_data)::json
+    INTO v_result
+    FROM profile_data;
+
+    -- Check if we got any results
+    if v_result is null then
+        raise exception 'Failed to generate profile data';
+    end if;
+
+    return v_result;
+end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.get_tenant_profiles_for_typesense()
+ RETURNS SETOF json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+begin
+    return query
+    WITH profile_data AS (
+        SELECT
+            tp.id,
+            tp.avatar_url,
+            EXTRACT(EPOCH FROM tp.created_at)::integer as created_at,
+            u.email,
+            tp.first_name,
+            tp.initials,
+            tp.last_name,
+            tp.name,
+            ARRAY_REMOVE(ARRAY[u.phone], NULL) as phone,
+            tp.role::text,
+            tp.tenant_id,
+            tp.user_id::text,
+            -- Aggregate pet information into an array of objects
+            COALESCE(
+                jsonb_agg(
+                    jsonb_build_object(
+                        'avatar_url', p.avatar_url,
+                        'id', p.id,
+                        'name', p.name
+                    )
+                    ORDER BY p.name
+                ) FILTER (WHERE p.id IS NOT NULL),
+                '[]'::jsonb
+            ) as pets
+        FROM tenant_profiles tp
+        -- Join with users to get email and phone
+        LEFT JOIN users u ON tp.user_id = u.id
+        -- Join with pet_parents to get pet relationships
+        LEFT JOIN pet_parents pp ON tp.id = pp.tenant_profile_id AND tp.tenant_id = pp.tenant_id
+        -- Join with pets to get pet details
+        LEFT JOIN pets p ON pp.pet_id = p.id AND pp.tenant_id = p.tenant_id
+        GROUP BY
+            tp.id,
+            tp.avatar_url,
+            tp.created_at,
+            u.email,
+            tp.first_name,
+            tp.initials,
+            tp.last_name,
+            tp.name,
+            u.phone,
+            tp.role,
+            tp.tenant_id,
+            tp.user_id
+    )
+    SELECT row_to_json(profile_data)::json
+    FROM profile_data;
 end;
 $function$
 ;

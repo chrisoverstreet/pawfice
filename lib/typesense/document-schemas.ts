@@ -28,4 +28,11 @@ export const tenantProfileDocumentSchema = z.object({
   role: z.enum(['owner', 'admin', 'parent']),
   tenant_id: z.string(),
   userId: z.string().nullish(),
+  pets: z.array(
+    z.object({
+      avatar_url: z.string().nullish(),
+      id: z.string(),
+      name: z.string(),
+    }),
+  ),
 });

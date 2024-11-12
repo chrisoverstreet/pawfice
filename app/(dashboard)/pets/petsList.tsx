@@ -13,7 +13,7 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 export default function PetsList() {
-  const searchKey = useScopedSearchKey('16pu3XmU7I5e20n26Qmu8nn7N6Y2HiIY');
+  const searchKey = useScopedSearchKey('yF0jZSSWXvqIJ7rvsYI46k4XK1lwlrxF');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
