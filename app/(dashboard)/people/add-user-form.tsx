@@ -1,7 +1,7 @@
 'use client';
 
 import addUserAction from '@/app/(dashboard)/people/add-user-action';
-import useModal from '@/app/(dashboard)/people/use-modal';
+import usePeoplePageModal from '@/app/(dashboard)/people/use-people-page-modal';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -42,7 +42,7 @@ type FormValues = z.infer<typeof schema>;
 export default function AddUserForm() {
   const router = useRouter();
 
-  const [, setModal] = useModal();
+  const [, setModal] = usePeoplePageModal();
 
   const { execute, hasSucceeded, isPending } = useAction(addUserAction, {
     onSuccess: async ({ data: id }) => {

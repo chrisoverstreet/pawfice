@@ -1,5 +1,6 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
 import ContentTabs from '@/app/(dashboard)/people/[userId]/content-tabs';
+import EditAvatarResponsiveDialog from '@/app/(dashboard)/people/[userId]/edit-avatar-responsive-dialog';
 import getPageData from '@/app/(dashboard)/people/[userId]/get-page-data';
 import Heading from '@/app/(dashboard)/people/[userId]/heading';
 import {
@@ -47,26 +48,29 @@ export default async function UserPage({
   }
 
   return (
-    <DashboardPage
-      heading={
-        <Breadcrumb>
-          <BreadcrumbList>
-            <BreadcrumbItem>
-              <BreadcrumbLink asChild>
-                <Link href='/people'>People</Link>
-              </BreadcrumbLink>
-            </BreadcrumbItem>
-            <BreadcrumbSeparator />
-            <BreadcrumbItem>
-              <BreadcrumbPage>{data.name}</BreadcrumbPage>
-            </BreadcrumbItem>
-          </BreadcrumbList>
-        </Breadcrumb>
-      }
-    >
-      <Heading user={data} />
-      <ContentTabs data={data} />
-    </DashboardPage>
+    <>
+      <DashboardPage
+        heading={
+          <Breadcrumb>
+            <BreadcrumbList>
+              <BreadcrumbItem>
+                <BreadcrumbLink asChild>
+                  <Link href='/people'>People</Link>
+                </BreadcrumbLink>
+              </BreadcrumbItem>
+              <BreadcrumbSeparator />
+              <BreadcrumbItem>
+                <BreadcrumbPage>{data.name}</BreadcrumbPage>
+              </BreadcrumbItem>
+            </BreadcrumbList>
+          </Breadcrumb>
+        }
+      >
+        <Heading user={data} />
+        <ContentTabs data={data} />
+      </DashboardPage>
+      <EditAvatarResponsiveDialog />
+    </>
   );
 }
 

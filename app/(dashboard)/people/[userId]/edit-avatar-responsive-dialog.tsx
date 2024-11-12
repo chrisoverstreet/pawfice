@@ -1,7 +1,7 @@
 'use client';
 
-import AddUserForm from '@/app/(dashboard)/people/add-user-form';
-import usePeoplePageModal from '@/app/(dashboard)/people/use-people-page-modal';
+import EditAvatarForm from '@/app/(dashboard)/people/[userId]/edit-avatar-form';
+import useUserPageModal from '@/app/(dashboard)/people/[userId]/use-user-page-modal';
 import {
   ResponsiveDialog,
   ResponsiveDialogContent,
@@ -10,22 +10,22 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog';
 
-export default function AddUserResponsiveDialog() {
-  const [modal, setModal] = usePeoplePageModal();
+export default function EditAvatarResponsiveDialog() {
+  const [modal, setModal] = useUserPageModal();
 
   return (
     <ResponsiveDialog
-      open={modal === 'add-user'}
+      open={modal === 'edit-avatar'}
       onOpenChange={(open) => setModal(open ? 'add-user' : null)}
     >
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>Add user</ResponsiveDialogTitle>
+          <ResponsiveDialogTitle>Edit avatar</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
-            Fill out the form to quickly add a new user
+            Click below to update image
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <AddUserForm />
+        <EditAvatarForm />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );
