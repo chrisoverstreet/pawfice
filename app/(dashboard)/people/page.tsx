@@ -1,7 +1,7 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
 import AddUserButton from '@/app/(dashboard)/people/add-user-button';
 import AddUserResponsiveDialog from '@/app/(dashboard)/people/add-user-responsive-dialog';
-import PeopleList from '@/app/(dashboard)/people/peopleList';
+import PeopleList from '@/app/(dashboard)/people/people-list';
 import SearchInput from '@/app/(dashboard)/search-input';
 import {
   Breadcrumb,
