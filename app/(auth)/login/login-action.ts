@@ -32,7 +32,7 @@ const loginAction = actionClient
     if (session?.user) {
       const { data: tenantUsersData } = await supabase
         .from('tenant_profiles')
-        .select('tenant_id, role')
+        .select('id, tenant_id, role')
         .eq('user_id', session.user.id)
         .order('created_at', { ascending: false })
         .single();
@@ -42,6 +42,7 @@ const loginAction = actionClient
         await supabaseAdmin.auth.admin.updateUserById(session.user.id, {
           app_metadata: {
             tenant_id: tenantUsersData.tenant_id,
+            tenant_profile_id: tenantUsersData.id,
             tenant_role: tenantUsersData.role,
           },
         });

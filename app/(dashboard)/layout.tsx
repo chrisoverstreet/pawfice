@@ -14,7 +14,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { getServerClient } from '@/lib/supabase/get-server-client';
-import { Home, Users } from 'lucide-react';
+import { Home, PawPrint, Users } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ReactNode } from 'react';
@@ -29,6 +29,11 @@ const links = [
     title: 'People',
     url: '/people',
     icon: Users,
+  },
+  {
+    title: 'Pets',
+    url: '/pets',
+    icon: PawPrint,
   },
 ] as const;
 

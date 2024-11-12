@@ -1,9 +1,9 @@
 'use client';
 
-import useQ from '@/app/(dashboard)/people/use-q';
-import useScopedSearchKey from '@/app/(dashboard)/people/use-scoped-search-key';
+import useQ from '@/app/(dashboard)/use-q';
 import { Skeleton } from '@/components/ui/skeleton';
 import { tenantProfileDocumentSchema } from '@/lib/typesense/document-schemas';
+import useScopedSearchKey from '@/utils/typesense/use-scoped-search-key';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,8 +12,8 @@ import { SearchClient } from 'typesense';
 import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
-export default function List() {
-  const searchKey = useScopedSearchKey();
+export default function PeopleList() {
+  const searchKey = useScopedSearchKey('zKym5NXbmVMbFjWNGtfIW8CjZ1zAXvke');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);

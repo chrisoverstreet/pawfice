@@ -1,7 +1,5 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
-import AddUserButton from '@/app/(dashboard)/people/add-user-button';
-import AddUserResponsiveDialog from '@/app/(dashboard)/people/add-user-responsive-dialog';
-import PeopleList from '@/app/(dashboard)/people/peopleList';
+import PetsList from '@/app/(dashboard)/pets/petsList';
 import SearchInput from '@/app/(dashboard)/search-input';
 import {
   Breadcrumb,
@@ -12,10 +10,10 @@ import {
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'People',
+  title: 'Pets',
 };
 
-export default async function PeoplePage() {
+export default async function PetsPage() {
   return (
     <>
       <DashboardPage
@@ -23,7 +21,7 @@ export default async function PeoplePage() {
           <Breadcrumb>
             <BreadcrumbList>
               <BreadcrumbItem>
-                <BreadcrumbPage>People</BreadcrumbPage>
+                <BreadcrumbPage>Pets</BreadcrumbPage>
               </BreadcrumbItem>
             </BreadcrumbList>
           </Breadcrumb>
@@ -34,12 +32,10 @@ export default async function PeoplePage() {
             <div className='flex gap-4 flex-1'>
               <SearchInput />
             </div>
-            <AddUserButton />
           </div>
-          <PeopleList />
+          <PetsList />
         </div>
       </DashboardPage>
-      <AddUserResponsiveDialog />
     </>
   );
 }

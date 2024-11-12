@@ -1,6 +1,6 @@
 'use client';
 
-import useQ from '@/app/(dashboard)/people/use-q';
+import useQ from '@/app/(dashboard)/use-q';
 import { Input } from '@/components/ui/input';
 
 export default function SearchInput() {
