@@ -11,12 +11,14 @@ export default function DashboardPage({
 }) {
   return (
     <SidebarInset>
-      <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4'>
+      <header className='flex h-16 shrink-0 items-center gap-2 border-b px-4 sticky w-full top-0 z-40 backdrop-blur-md bg-white/30'>
         <SidebarTrigger className='-ml-1' />
         <Separator orientation='vertical' className='mr-2 h-4' />
         {heading}
       </header>
-      <div className='flex flex-1 flex-col gap-4 p-4'>{children}</div>
+      <div className='conatiner mx-auto w-full max-w-screen-xl px-4 py-8'>
+        {children}
+      </div>
     </SidebarInset>
   );
 }

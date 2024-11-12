@@ -1,4 +1,7 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
+import ContentTabs from '@/app/(dashboard)/people/[userId]/content-tabs';
+import getPageData from '@/app/(dashboard)/people/[userId]/get-page-data';
+import Heading from '@/app/(dashboard)/people/[userId]/heading';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -8,19 +11,9 @@ import {
   BreadcrumbSeparator,
 } from '@/components/ui/breadcrumb';
 import { getAdminClient } from '@/lib/supabase/get-admin-client';
-import { getServerClient } from '@/lib/supabase/get-server-client';
 import type { Metadata } from 'next';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-
-const getPageData = async (userId: string) => {
-  const supabase = await getServerClient();
-  return supabase
-    .from('tenant_profiles')
-    .select('*, users(*)')
-    .eq('id', userId)
-    .single();
-};
 
 export async function generateMetadata({
   params,
@@ -36,7 +29,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `${data.first_name} | Pawfice`,
+    title: `${data.name} | Pawfice`,
   };
 }
 
@@ -65,13 +58,14 @@ export default async function UserPage({
             </BreadcrumbItem>
             <BreadcrumbSeparator />
             <BreadcrumbItem>
-              <BreadcrumbPage>{data.first_name}</BreadcrumbPage>
+              <BreadcrumbPage>{data.name}</BreadcrumbPage>
             </BreadcrumbItem>
           </BreadcrumbList>
         </Breadcrumb>
       }
     >
-      <pre>{JSON.stringify(data, null, `\t`)}</pre>
+      <Heading user={data} />
+      <ContentTabs data={data} />
     </DashboardPage>
   );
 }
