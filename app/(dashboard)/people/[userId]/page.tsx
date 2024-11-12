@@ -69,7 +69,7 @@ export default async function UserPage({
         <Heading user={data} />
         <ContentTabs data={data} />
       </DashboardPage>
-      <EditAvatarResponsiveDialog />
+      <EditAvatarResponsiveDialog user={data} />
     </>
   );
 }

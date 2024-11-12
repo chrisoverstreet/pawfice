@@ -1,6 +1,7 @@
 'use client';
 
 import EditAvatarForm from '@/app/(dashboard)/people/[userId]/edit-avatar-form';
+import { PageData } from '@/app/(dashboard)/people/[userId]/get-page-data';
 import useUserPageModal from '@/app/(dashboard)/people/[userId]/use-user-page-modal';
 import {
   ResponsiveDialog,
@@ -10,7 +11,11 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog';
 
-export default function EditAvatarResponsiveDialog() {
+export default function EditAvatarResponsiveDialog({
+  user,
+}: {
+  user: Pick<PageData, 'avatar_url' | 'id'>;
+}) {
   const [modal, setModal] = useUserPageModal();
 
   return (
@@ -25,7 +30,7 @@ export default function EditAvatarResponsiveDialog() {
             Click below to update image
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <EditAvatarForm />
+        <EditAvatarForm user={user} />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );
