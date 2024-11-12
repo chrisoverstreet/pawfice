@@ -10,6 +10,21 @@ create sequence "public"."tenant_profiles_serial_id_seq";
 
 create sequence "public"."tenants_serial_id_seq";
 
+CREATE OR REPLACE FUNCTION public.tenant_id()
+    RETURNS text
+    LANGUAGE plpgsql
+    SECURITY DEFINER
+AS $function$
+DECLARE
+    tenant_id text;
+BEGIN
+    tenant_id := auth.jwt() -> 'app_metadata' ->> 'tenant_id';
+
+    RETURN tenant_id;
+END;
+$function$
+;
+
 create table "public"."pet_parents" (
     "id" integer not null default nextval('pet_parents_id_seq'::regclass),
     "tenant_id" text not null default tenant_id(),
@@ -542,23 +557,6 @@ begin
     -- Return true if user is an owner or admin
     return user_role in ('owner', 'admin');
 end;
-$function$
-;
-
-CREATE OR REPLACE FUNCTION public.tenant_id()
- RETURNS text
- LANGUAGE plpgsql
- SECURITY DEFINER
-AS $function$
-DECLARE
-    tenant_id text;
-BEGIN
-    raise info 'Test: %', auth.jwt();
-
-    tenant_id := auth.jwt() -> 'app_metadata' ->> 'tenant_id';
-
-    RETURN tenant_id;
-END;
 $function$
 ;
 
