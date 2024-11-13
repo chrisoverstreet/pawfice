@@ -13,10 +13,10 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import useTransformedImage from '@/hooks/use-transformed-image';
-import { tenantProfileDocumentSchema } from '@/lib/typesense/document-schemas';
+import { tenantUserProfileDocumentSchema } from '@/lib/typesense/document-schemas';
 import useScopedSearchKey from '@/utils/typesense/use-scoped-search-key';
 import { useInfiniteQuery } from '@tanstack/react-query';
-import { ChevronDown, PawPrint, User } from 'lucide-react';
+import { ChevronDown, User } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SearchClient } from 'typesense';
@@ -24,7 +24,7 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 export default function PeopleList() {
-  const searchKey = useScopedSearchKey('fG4oXT3JcogFL3eD8gqQfrHJvHC8Fd0U');
+  const searchKey = useScopedSearchKey('VOP9Wjg6O3bgrlQ4u93Pt0CDWV6ye646');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
@@ -47,7 +47,7 @@ export default function PeopleList() {
           .search(
             {
               q: debouncedQ,
-              query_by: ['name', 'email', 'phone', 'pets.name'],
+              query_by: ['name', 'email', 'phone'],
               facet_by: ['role'],
               page: pageParam,
             },
@@ -95,7 +95,7 @@ export default function PeopleList() {
       z
         .array(
           z.object({
-            document: tenantProfileDocumentSchema.omit({
+            document: tenantUserProfileDocumentSchema.omit({
               tenant_id: true,
             }),
           }),
@@ -146,7 +146,10 @@ function Hit({
   hit,
 }: {
   hit: {
-    document: Omit<z.infer<typeof tenantProfileDocumentSchema>, 'tenant_id'>;
+    document: Omit<
+      z.infer<typeof tenantUserProfileDocumentSchema>,
+      'tenant_id'
+    >;
   };
 }) {
   const [expanded, setExpanded] = useState(false);
@@ -170,7 +173,7 @@ function Hit({
         <TableCell className='font-medium flex gap-2 items-center'>
           <Link href={`/people/${hit.document.id}`}>
             <Avatar className='w-8 h-8 flex-shrink-0'>
-              <AvatarImage src={src} alt={hit.document.name} />
+              <AvatarImage src={src} alt={hit.document.name ?? 'Unknown'} />
               <AvatarFallback>{hit.document.initials}</AvatarFallback>
             </Avatar>
           </Link>
@@ -179,7 +182,7 @@ function Hit({
               href={`/people/${hit.document.id}`}
               className='hover:underline'
             >
-              <span className='truncate'>{hit.document.name}</span>
+              <span className='truncate'>{hit.document.name ?? 'Unknown'}</span>
             </Link>
             {(hit.document.role === 'admin' ||
               hit.document.role === 'owner') && (
@@ -203,33 +206,33 @@ function Hit({
         <TableCell>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-2 max-w-full'>
-              {!!hit.document.pets.length && (
-                <PawPrint className='h-3 w-3 flex-shrink-0' />
-              )}
-              <div className='flex -space-x-2 overflow-hidden flex-shrink-0'>
-                {hit.document.pets.map((pet) => (
-                  <Avatar
-                    key={pet.id}
-                    className='w-6 h-6 border-2 border-background'
-                  >
-                    <AvatarImage
-                      src={pet.avatar_url ?? undefined}
-                      alt={pet.name}
-                    />
-                    <AvatarFallback>{pet.name[0]}</AvatarFallback>
-                  </Avatar>
-                ))}
-              </div>
+              {/*{!!hit.document.pets.length && (*/}
+              {/*  <PawPrint className='h-3 w-3 flex-shrink-0' />*/}
+              {/*)}*/}
+              {/*<div className='flex -space-x-2 overflow-hidden flex-shrink-0'>*/}
+              {/*  {hit.document.pets.map((pet) => (*/}
+              {/*    <Avatar*/}
+              {/*      key={pet.id}*/}
+              {/*      className='w-6 h-6 border-2 border-background'*/}
+              {/*    >*/}
+              {/*      <AvatarImage*/}
+              {/*        src={pet.avatar_url ?? undefined}*/}
+              {/*        alt={pet.name}*/}
+              {/*      />*/}
+              {/*      <AvatarFallback>{pet.name[0]}</AvatarFallback>*/}
+              {/*    </Avatar>*/}
+              {/*  ))}*/}
+              {/*</div>*/}
               <div className='truncate hidden sm:inline-block max-w-[150px]'>
-                {hit.document.pets.map((pet) => (
-                  <Link
-                    className='inline hover:underline'
-                    key={pet.id}
-                    href={`/pets/${pet.id}`}
-                  >
-                    {pet.name}
-                  </Link>
-                ))}
+                {/*{hit.document.pets.map((pet) => (*/}
+                {/*  <Link*/}
+                {/*    className='inline hover:underline'*/}
+                {/*    key={pet.id}*/}
+                {/*    href={`/pets/${pet.id}`}*/}
+                {/*  >*/}
+                {/*    {pet.name}*/}
+                {/*  </Link>*/}
+                {/*))}*/}
               </div>
             </div>
             <ChevronDown className='h-4 w-4 flex-shrink-0 md:hidden' />
@@ -254,10 +257,10 @@ function Hit({
               <p>
                 <strong>Role:</strong> {hit.document.role}
               </p>
-              <p>
-                <strong>Pets:</strong>{' '}
-                {hit.document.pets.map((pet) => pet.name).join(', ')}
-              </p>
+              {/*<p>*/}
+              {/*  <strong>Pets:</strong>{' '}*/}
+              {/*  {hit.document.pets.map((pet) => pet.name).join(', ')}*/}
+              {/*</p>*/}
             </div>
           </div>
         </TableCell>

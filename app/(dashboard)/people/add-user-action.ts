@@ -1,7 +1,6 @@
 'use server';
 
 import { actionClient } from '@/lib/safe-action';
-import { getAdminClient } from '@/lib/supabase/get-admin-client';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import indexTenantProfileAction from '@/utils/typesense/index-tenant-profile-action';
 import { isValidPhoneNumber } from 'libphonenumber-js';
@@ -24,48 +23,22 @@ const addUserAction = actionClient
   .action(async ({ parsedInput: { firstName, lastName, email, phone } }) => {
     const supabase = await getServerClient();
 
-    let data;
-    let error;
-
-    ({ data, error } = await supabase
-      .rpc('create_tenant_profile', {
+    const { data: customerId, error } = await supabase
+      .rpc('create_tenant_customer', {
+        p_email: email,
         p_first_name: firstName,
         p_last_name: lastName,
-        p_email: email,
         p_phone: phone,
       })
-      .single());
+      .single();
 
-    if (
-      error?.message ===
-        'AUTH_REQUIRED: No auth user found for contact details. Please create auth user first.' &&
-      (email || phone)
-    ) {
-      const supabaseAdmin = getAdminClient();
-      const { error: addAuthUserError } =
-        await supabaseAdmin.auth.admin.createUser({ email, phone });
-      if (addAuthUserError) {
-        throw addAuthUserError;
-      }
-
-      // Try again
-      ({ data, error } = await supabase
-        .rpc('create_tenant_profile', {
-          p_first_name: firstName,
-          p_last_name: lastName,
-          p_email: email,
-          p_phone: phone,
-        })
-        .single());
+    if (error) {
+      throw error;
     }
 
-    if (error || !data) {
-      throw error || new Error('Unexpected error');
-    }
+    await indexTenantProfileAction({ id: customerId }).catch(console.error);
 
-    await indexTenantProfileAction({ id: data }).catch(console.error);
-
-    return data;
+    return customerId;
   });
 
 export default addUserAction;

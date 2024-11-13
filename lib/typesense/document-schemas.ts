@@ -1,3 +1,4 @@
+import type { Enums } from '@/utils/supabase/types';
 import { z } from 'zod';
 
 export const petDocumentSchema = z.object({
@@ -15,24 +16,26 @@ export const petDocumentSchema = z.object({
   ),
 });
 
-export const tenantProfileDocumentSchema = z.object({
+export const tenantUserProfileDocumentSchema = z.object({
   avatar_url: z.string().nullish(),
   created_at: z.number().int(),
   email: z.string().email().nullish(),
-  first_name: z.string(),
+  first_name: z.string().nullish(),
   id: z.string(),
-  initials: z.string(),
+  initials: z.string().nullish(),
   last_name: z.string().nullish(),
-  name: z.string(),
+  name: z.string().nullish(),
   phone: z.array(z.string()).nullish(),
-  role: z.enum(['owner', 'admin', 'parent']),
+  role: z.enum(['owner', 'admin', 'staff', 'customer']) satisfies z.ZodType<
+    Enums<'tenant_role'>
+  >,
   tenant_id: z.string(),
   userId: z.string().nullish(),
-  pets: z.array(
-    z.object({
-      avatar_url: z.string().nullish(),
-      id: z.string(),
-      name: z.string(),
-    }),
-  ),
+  // pets: z.array(
+  //   z.object({
+  //     avatar_url: z.string().nullish(),
+  //     id: z.string(),
+  //     name: z.string(),
+  //   }),
+  // ),
 });

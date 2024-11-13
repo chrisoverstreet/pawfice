@@ -45,11 +45,11 @@ export default function AddUserForm() {
   const [, setModal] = usePeoplePageModal();
 
   const { execute, hasSucceeded, isPending } = useAction(addUserAction, {
-    onSuccess: async ({ data: id }) => {
+    onSuccess: async ({ data: customerId }) => {
       await setModal(null);
-      if (id) {
+      if (customerId) {
         toast.success('Successfully added new user');
-        router.push(`/people/${id}`);
+        router.replace(`/people/${customerId}`);
       }
     },
     onError: ({ error }) =>

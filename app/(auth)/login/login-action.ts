@@ -27,7 +27,7 @@ const loginAction = actionClient
       authUser.user.app_metadata.role
     ) {
       const { error } = await supabase
-        .from('tenant_memberships')
+        .from('tenant_user_profiles')
         .select('*')
         .match({
           user_id: authUser.user.id,
@@ -40,8 +40,8 @@ const loginAction = actionClient
       }
     }
 
-    const { data: tenantMembership } = await supabase
-      .from('tenant_memberships')
+    const { data: tenantUserProfile } = await supabase
+      .from('tenant_user_profiles')
       .select('*')
       .eq('user_id', authUser.user.id)
       .limit(1)
@@ -52,14 +52,14 @@ const loginAction = actionClient
 
     await supabaseAdmin.auth.admin.updateUserById(authUser.user.id, {
       app_metadata: {
-        tenant_id: tenantMembership ? tenantMembership.tenant_id : undefined,
-        role: tenantMembership ? tenantMembership.role : undefined,
+        tenant_id: tenantUserProfile ? tenantUserProfile.tenant_id : undefined,
+        role: tenantUserProfile ? tenantUserProfile.role : undefined,
       },
     });
 
     await supabase.auth.refreshSession();
 
-    redirect(tenantMembership ? '/dashboard' : '/get-started');
+    redirect(tenantUserProfile ? '/dashboard' : '/get-started');
   });
 
 export default loginAction;

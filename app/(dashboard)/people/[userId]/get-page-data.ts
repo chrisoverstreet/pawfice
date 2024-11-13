@@ -1,13 +1,13 @@
 'use server';
 
 import { getServerClient } from '@/lib/supabase/get-server-client';
-import { QueryData } from '@supabase/supabase-js';
+import type { QueryData } from '@supabase/supabase-js';
 
 export default async function getPageData(userId: string) {
   const supabase = await getServerClient();
   return supabase
-    .from('tenant_profiles')
-    .select('*, auth:users(*), pets:pet_parents(pet:pets(*))')
+    .from('tenant_user_profiles')
+    .select('*')
     .eq('id', userId)
     .single();
 }

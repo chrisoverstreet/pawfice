@@ -40,25 +40,40 @@ const addTenantAction = actionClient
       throw tenantError;
     }
 
-    // Create tenant membership
-    const { data: tenantMembership, error: membershipError } = await supabase
-      .from('tenant_memberships')
-      .insert({
-        tenant_id: tenant.id,
-        user_id: user.id,
-        role: 'owner',
-      })
-      .select('tenant_id, role')
-      .single();
-    if (membershipError) {
-      throw membershipError;
+    // Get platform profile info
+    const { data: platformProfile, error: platformProfileError } =
+      await supabase
+        .from('platform_profiles')
+        .select('first_name, last_name')
+        .eq('id', user.id)
+        .single();
+    if (platformProfileError) {
+      throw platformProfileError;
+    }
+
+    // Create tenant user profile
+    const { data: tenantUserProfile, error: tenantUserProfileError } =
+      await supabase
+        .from('tenant_user_profiles')
+        .insert({
+          tenant_id: tenant.id,
+          id: user.id,
+          auth_user_id: user.id,
+          first_name: platformProfile.first_name,
+          last_name: platformProfile.last_name,
+          role: 'owner',
+        })
+        .select('tenant_id, role')
+        .single();
+    if (tenantUserProfileError) {
+      throw tenantUserProfileError;
     }
 
     const supabaseAdmin = getAdminClient();
     await supabaseAdmin.auth.admin.updateUserById(user.id, {
       app_metadata: {
-        tenant_id: tenantMembership.tenant_id,
-        role: tenantMembership.role,
+        tenant_id: tenantUserProfile.tenant_id,
+        role: tenantUserProfile.role,
       },
     });
 
