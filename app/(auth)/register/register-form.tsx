@@ -1,5 +1,6 @@
 'use client';
 
+import { registerAction } from '@/app/(auth)/register/register-action';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -10,10 +11,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import { getBrowserClient } from '@/lib/supabase/get-browser-client';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMutation } from '@tanstack/react-query';
-import { useRouter } from 'next/navigation';
+import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -22,41 +21,15 @@ const schema = z.object({
   email: z.string().email(),
   firstName: z.string(),
   lastName: z.string(),
-  // TODO better pw requirements
   password: z.string(),
 });
 
 type FormValues = z.infer<typeof schema>;
 
 export default function RegisterForm() {
-  const router = useRouter();
-
-  const { isPending, isSuccess, mutate } = useMutation({
-    mutationFn: async ({
-      email,
-      firstName,
-      lastName,
-      password,
-    }: FormValues) => {
-      const supabase = getBrowserClient();
-
-      const { error } = await supabase.auth.signUp({
-        email,
-        password,
-        options: {
-          data: {
-            first_name: firstName,
-            last_name: lastName,
-          },
-        },
-      });
-
-      if (error) {
-        throw error;
-      }
-    },
-    onSuccess: () => router.replace('/'),
-    onError: (error) => toast.error(error.message),
+  const { execute, hasSucceeded, isPending } = useAction(registerAction, {
+    onError: ({ error }) =>
+      toast.error(error.serverError || 'Unexpected error'),
   });
 
   const methods = useForm<FormValues>({
@@ -66,7 +39,7 @@ export default function RegisterForm() {
       lastName: '',
       password: '',
     },
-    disabled: isPending || isSuccess,
+    disabled: isPending || hasSucceeded,
     resolver: zodResolver(schema),
   });
 
@@ -74,7 +47,7 @@ export default function RegisterForm() {
     <Form {...methods}>
       <form
         className='flex flex-col gap-4'
-        onSubmit={methods.handleSubmit((fv) => mutate(fv))}
+        onSubmit={methods.handleSubmit((fv) => execute(fv))}
       >
         <FormField
           control={methods.control}

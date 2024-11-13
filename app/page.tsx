@@ -9,9 +9,6 @@ export default async function Home() {
     data: { session },
   } = await supabase.auth.getSession();
 
-  const { data: tenantRole, error: tenantError } =
-    await supabase.rpc('tenant_role');
-
   return (
     <div className='flex flex-col gap-8'>
       <h1>Home page</h1>
@@ -25,8 +22,6 @@ export default async function Home() {
       ) : (
         <Link href='/login'>Sign in</Link>
       )}
-      <pre>{JSON.stringify(tenantRole, null, `\t`)}</pre>
-      <pre>{JSON.stringify(tenantError, null, `\t`)}</pre>
     </div>
   );
 }

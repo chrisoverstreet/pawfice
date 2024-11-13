@@ -240,7 +240,38 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 	('00000000-0000-0000-0000-000000000000', '7a49ebcf-765e-4210-b3c5-e4b141d20278', '{"action":"token_revoked","actor_id":"ca42de27-cf53-448b-a358-7012316e4aca","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-11 23:26:41.276457+00', ''),
 	('00000000-0000-0000-0000-000000000000', '01b20845-953b-48ca-918e-e86e918967bc', '{"action":"token_refreshed","actor_id":"ca42de27-cf53-448b-a358-7012316e4aca","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-12 00:40:32.352403+00', ''),
 	('00000000-0000-0000-0000-000000000000', 'c3b8f665-ca68-40db-96a7-4fca7a040056', '{"action":"token_revoked","actor_id":"ca42de27-cf53-448b-a358-7012316e4aca","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-12 00:40:32.352859+00', ''),
-	('00000000-0000-0000-0000-000000000000', 'c3314a13-1dc0-4a8f-bb11-d24f9addaf62', '{"action":"token_refreshed","actor_id":"ca42de27-cf53-448b-a358-7012316e4aca","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-12 00:40:32.792401+00', '');
+	('00000000-0000-0000-0000-000000000000', 'c3314a13-1dc0-4a8f-bb11-d24f9addaf62', '{"action":"token_refreshed","actor_id":"ca42de27-cf53-448b-a358-7012316e4aca","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-12 00:40:32.792401+00', ''),
+	('00000000-0000-0000-0000-000000000000', '1ec175b5-5476-45b0-9723-2fff3d2fb553', '{"action":"user_confirmation_requested","actor_id":"763afc69-5fcc-4d25-9293-c89526ddfe8d","actor_name":"Chris Overstreet","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-12 22:45:17.45393+00', ''),
+	('00000000-0000-0000-0000-000000000000', '44e634b3-2aad-4cd7-a442-1d734a3130da', '{"action":"user_confirmation_requested","actor_id":"53fc7ad2-1902-47c2-81a9-99f6a3d88b9f","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 18:40:56.472747+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'b8f43cc2-efef-4db8-94ba-2a170670e2be', '{"action":"user_confirmation_requested","actor_id":"b7e71477-6dd6-4626-98e6-5c53f4f625b5","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 18:42:58.044596+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'ca57f49c-e1ae-4d48-83f7-b7eed138b2f4', '{"action":"user_deleted","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"team","traits":{"user_email":"christopheroverstreet@gmail.com","user_id":"b7e71477-6dd6-4626-98e6-5c53f4f625b5","user_phone":""}}', '2024-11-13 18:42:58.152694+00', ''),
+	('00000000-0000-0000-0000-000000000000', '1293eff8-87e4-4738-a1eb-6abd3b907b96', '{"action":"user_confirmation_requested","actor_id":"b8475dcb-bf25-46e1-9044-8be6c9175d44","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 18:50:17.014367+00', ''),
+	('00000000-0000-0000-0000-000000000000', '79b1db49-13d7-4533-8dda-41da7d374980', '{"action":"user_confirmation_requested","actor_id":"6a09c0d2-8dcb-41c2-9919-770682834357","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 19:06:21.391599+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'd63ff8e6-32eb-41cb-94b1-63ac9ec5f19a', '{"action":"user_confirmation_requested","actor_id":"a611e4ba-9c5a-4586-8615-54a7b59914eb","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 19:06:56.868502+00', ''),
+	('00000000-0000-0000-0000-000000000000', '6343588a-161a-4dd5-8621-ddebc7eefe51', '{"action":"user_signedup","actor_id":"a611e4ba-9c5a-4586-8615-54a7b59914eb","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team"}', '2024-11-13 19:07:08.003322+00', ''),
+	('00000000-0000-0000-0000-000000000000', '33399b53-47dc-4ebf-b074-c5d0d6b4b820', '{"action":"user_confirmation_requested","actor_id":"d6867cd2-49cc-465c-8a20-84ac81f50a90","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 19:10:52.422091+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a3c0bcb0-2858-4277-af3b-4eb8cfdd36a1', '{"action":"user_signedup","actor_id":"d6867cd2-49cc-465c-8a20-84ac81f50a90","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team"}', '2024-11-13 19:10:59.082185+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dabab08b-d267-4f02-9a62-366d841d15e9', '{"action":"user_confirmation_requested","actor_id":"177a06b8-339b-49ec-8b2e-80c80ac6bc82","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"user","traits":{"provider":"email"}}', '2024-11-13 19:12:24.817722+00', ''),
+	('00000000-0000-0000-0000-000000000000', '2296b572-3f16-49a4-bf3c-77e5d57bb3d5', '{"action":"user_signedup","actor_id":"177a06b8-339b-49ec-8b2e-80c80ac6bc82","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team"}', '2024-11-13 19:12:51.315883+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'e38d69fa-470d-4a21-b2ab-aaf68e51e87b', '{"action":"user_signedup","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-11-13 19:18:00.974167+00', ''),
+	('00000000-0000-0000-0000-000000000000', '244c92fb-4d8f-41a8-a8fa-ce8421421655', '{"action":"login","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 19:18:00.986947+00', ''),
+	('00000000-0000-0000-0000-000000000000', '34e9a833-4976-4d5b-af57-ae8fd1e0fe51', '{"action":"logout","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account"}', '2024-11-13 19:25:55.777623+00', ''),
+	('00000000-0000-0000-0000-000000000000', '956495fd-e699-408c-90f3-3ef0e0866a95', '{"action":"login","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 19:57:24.67987+00', ''),
+	('00000000-0000-0000-0000-000000000000', '83b37086-e4b9-49f5-9fad-82839f3df44d', '{"action":"user_modified","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"user","traits":{"user_email":"christopheroverstreet@gmail.com","user_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","user_phone":""}}', '2024-11-13 19:57:24.761655+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dd0c202c-3406-4a8f-a0c1-ae75a2335096', '{"action":"token_refreshed","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-13 19:57:24.780816+00', ''),
+	('00000000-0000-0000-0000-000000000000', '73df4172-468f-4e3a-86f6-0e0d14a17230', '{"action":"token_revoked","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-13 19:57:24.781088+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'f87e3a93-5b05-4362-9dd4-653788316595', '{"action":"logout","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account"}', '2024-11-13 19:57:43.857783+00', ''),
+	('00000000-0000-0000-0000-000000000000', '33615710-7105-4f14-b086-bb06e5841fa4', '{"action":"login","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 19:57:45.382702+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a4a0a3d9-deda-43e9-ba23-b1b6ead5c8db', '{"action":"logout","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account"}', '2024-11-13 19:59:35.337728+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dd23c826-5fe7-4d1d-bbb4-a543362c17df', '{"action":"login","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 19:59:37.303107+00', ''),
+	('00000000-0000-0000-0000-000000000000', '232692fa-7736-4ae1-b0ea-9766af1c7211', '{"action":"logout","actor_id":"06fb0fc1-92cd-4366-a1fa-e484d405b90e","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account"}', '2024-11-13 19:59:52.989788+00', ''),
+	('00000000-0000-0000-0000-000000000000', '1ce23353-9b62-4275-9eac-445d918df38f', '{"action":"user_signedup","actor_id":"11778173-4b7e-42c5-b59c-ad89e5f5f540","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-11-13 20:00:47.369385+00', ''),
+	('00000000-0000-0000-0000-000000000000', '187a0e5d-19fb-4a23-8c23-3108923f34ca', '{"action":"login","actor_id":"11778173-4b7e-42c5-b59c-ad89e5f5f540","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 20:00:47.37508+00', ''),
+	('00000000-0000-0000-0000-000000000000', '71a4a022-f849-4c71-bec6-82e6bd2a40c1', '{"action":"user_signedup","actor_id":"0a1ebb47-1503-41cb-9a13-e55cd7c05fe8","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"team","traits":{"provider":"email"}}', '2024-11-13 20:04:11.03132+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'dab7911e-db53-4919-9041-bdeadb8ee827', '{"action":"login","actor_id":"0a1ebb47-1503-41cb-9a13-e55cd7c05fe8","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"account","traits":{"provider":"email"}}', '2024-11-13 20:04:11.040613+00', ''),
+	('00000000-0000-0000-0000-000000000000', '4af73a30-21f2-4511-905f-e697954f717f', '{"action":"user_modified","actor_id":"00000000-0000-0000-0000-000000000000","actor_username":"service_role","actor_via_sso":false,"log_type":"user","traits":{"user_email":"christopheroverstreet@gmail.com","user_id":"0a1ebb47-1503-41cb-9a13-e55cd7c05fe8","user_phone":""}}', '2024-11-13 20:04:12.618833+00', ''),
+	('00000000-0000-0000-0000-000000000000', 'a60cc776-af14-48c0-9b29-e2ac47a832a4', '{"action":"token_refreshed","actor_id":"0a1ebb47-1503-41cb-9a13-e55cd7c05fe8","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-13 20:04:12.629536+00', ''),
+	('00000000-0000-0000-0000-000000000000', '49937c39-7d80-48b1-864c-7d2d6f5e5e34', '{"action":"token_revoked","actor_id":"0a1ebb47-1503-41cb-9a13-e55cd7c05fe8","actor_username":"christopheroverstreet@gmail.com","actor_via_sso":false,"log_type":"token"}', '2024-11-13 20:04:12.630039+00', '');
 
 
 --
@@ -248,7 +279,15 @@ INSERT INTO "auth"."audit_log_entries" ("instance_id", "id", "payload", "created
 --
 
 INSERT INTO "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_method", "code_challenge", "provider_type", "provider_access_token", "provider_refresh_token", "created_at", "updated_at", "authentication_method", "auth_code_issued_at") VALUES
-	('fc61022c-8f95-41c3-86c0-5de5722ea5ac', 'b10d8bb6-2537-4919-aac5-4a48e17c811b', '0bbadc95-8002-42bd-ac0c-987c1c8da3da', 's256', 'SJ7IKcO08b_zyoaIF0o5MkU8kqXcKgykqnnChfjVkoA', 'email', '', '', '2024-11-10 20:11:04.72604+00', '2024-11-10 20:16:04.853175+00', 'email/signup', '2024-11-10 20:16:04.85313+00');
+	('fc61022c-8f95-41c3-86c0-5de5722ea5ac', 'b10d8bb6-2537-4919-aac5-4a48e17c811b', '0bbadc95-8002-42bd-ac0c-987c1c8da3da', 's256', 'SJ7IKcO08b_zyoaIF0o5MkU8kqXcKgykqnnChfjVkoA', 'email', '', '', '2024-11-10 20:11:04.72604+00', '2024-11-10 20:16:04.853175+00', 'email/signup', '2024-11-10 20:16:04.85313+00'),
+	('36f39362-dc5c-415b-8c2a-68651ec5f13b', '763afc69-5fcc-4d25-9293-c89526ddfe8d', '6041d1ab-2ace-4757-a54a-3715080bd4bc', 's256', 'DWAT-e2rUxkZ3g9y3HaXwc8ogBp5hzKMiV4OpSm0ShM', 'email', '', '', '2024-11-12 22:45:17.454207+00', '2024-11-12 22:45:17.454207+00', 'email/signup', NULL),
+	('0b73f907-d21e-4634-813d-4cb0028dca83', '53fc7ad2-1902-47c2-81a9-99f6a3d88b9f', '8cd47faf-f41a-4ef4-a95d-93188bef5185', 's256', '6V4O2_ojdPoYnlJbckL-Ierg4a-5LRnwaIwV4Q1IQzM', 'email', '', '', '2024-11-13 18:40:56.473029+00', '2024-11-13 18:40:56.473029+00', 'email/signup', NULL),
+	('41de6273-305d-416b-b389-19f395f10456', 'b7e71477-6dd6-4626-98e6-5c53f4f625b5', '1188b1b7-ed2b-452e-84be-0b39a2f57ad5', 's256', '98x8SAhLNvfS3RoEABZbfPjDbn_W8CKYgXK49txaXaU', 'email', '', '', '2024-11-13 18:42:58.044814+00', '2024-11-13 18:42:58.044814+00', 'email/signup', NULL),
+	('551f8c74-4d11-456c-bd46-caec75718b43', 'b8475dcb-bf25-46e1-9044-8be6c9175d44', '01fb82d6-1777-44ff-b7c4-948e3cd32ea0', 's256', '6wwYAj4_YYzfP7u4u7GgYVVNcvS3EQbT_Z-uRM5ewjU', 'email', '', '', '2024-11-13 18:50:17.014647+00', '2024-11-13 18:50:17.014647+00', 'email/signup', NULL),
+	('ec69bf1b-01e9-40f1-acc4-96eda6a6ad47', '6a09c0d2-8dcb-41c2-9919-770682834357', '0cfb8b01-bebb-4fe7-aad2-3f1639e8d222', 's256', 'KJuwEN-28T9fV_LfS7FMX72EJAQMmXFiGr8NDfFruhU', 'email', '', '', '2024-11-13 19:06:21.391743+00', '2024-11-13 19:06:21.391743+00', 'email/signup', NULL),
+	('1b255ebf-dd6a-42b8-be5a-e731b5cd70ba', 'a611e4ba-9c5a-4586-8615-54a7b59914eb', '444e7d09-4350-49b0-993d-884010d517f0', 's256', 'LDzEOmU4_icG0jQOBBkYkiButKsqAtym7SXHmhHR_JU', 'email', '', '', '2024-11-13 19:06:56.868657+00', '2024-11-13 19:07:08.00631+00', 'email/signup', '2024-11-13 19:07:08.006249+00'),
+	('8f885f4e-322b-47a0-982a-6a6e12962cd0', 'd6867cd2-49cc-465c-8a20-84ac81f50a90', 'c0170571-ac73-4b64-a84b-a2d3443bf6db', 's256', 'zHv5rW8OOkfEHIx-G5j1DIuksfwErQU73TDOFzPc8bU', 'email', '', '', '2024-11-13 19:10:52.424274+00', '2024-11-13 19:10:59.084486+00', 'email/signup', '2024-11-13 19:10:59.08446+00'),
+	('82b0c1b3-74b8-4fac-9547-e9dd9d58301d', '177a06b8-339b-49ec-8b2e-80c80ac6bc82', '0cbd0556-2173-49cb-a546-681f3c7dbfcf', 's256', 'VTqbAqW249EXPayKMCMbNoq_Y8iYx2lYq8OYYh-X5Lk', 'email', '', '', '2024-11-13 19:12:24.818933+00', '2024-11-13 19:12:51.32283+00', 'email/signup', '2024-11-13 19:12:51.322785+00');
 
 
 --
@@ -256,8 +295,7 @@ INSERT INTO "auth"."flow_state" ("id", "user_id", "auth_code", "code_challenge_m
 --
 
 INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encrypted_password", "email_confirmed_at", "invited_at", "confirmation_token", "confirmation_sent_at", "recovery_token", "recovery_sent_at", "email_change_token_new", "email_change", "email_change_sent_at", "last_sign_in_at", "raw_app_meta_data", "raw_user_meta_data", "is_super_admin", "created_at", "updated_at", "phone", "phone_confirmed_at", "phone_change", "phone_change_token", "phone_change_sent_at", "email_change_token_current", "email_change_confirm_status", "banned_until", "reauthentication_token", "reauthentication_sent_at", "is_sso_user", "deleted_at", "is_anonymous") VALUES
-	('00000000-0000-0000-0000-000000000000', 'ca42de27-cf53-448b-a358-7012316e4aca', 'authenticated', 'authenticated', 'christopheroverstreet@gmail.com', '$2a$10$Kl6FVjeC8ArDeWhx6Dc2sOMGTJRXh1og3hVG4UQKz5aGvrjU1Y/Ym', '2024-11-11 18:42:34.183784+00', NULL, '', NULL, '', NULL, '', '', NULL, '2024-11-11 23:26:41.238959+00', '{"provider": "email", "providers": ["email"], "tenant_id": "2W0Y46", "tenant_role": "owner", "tenant_profile_id": "RXRWJD"}', '{}', NULL, '2024-11-11 18:42:34.177099+00', '2024-11-12 00:40:32.356152+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false),
-	('00000000-0000-0000-0000-000000000000', '97355939-99ea-46b9-9034-36ae11f93f93', 'authenticated', 'authenticated', 'john.doe@gmail.com', '$2a$10$uwIErWifKedFr9uu5T1T/uOZ6QmIVaDRWq8qapopph02TJjTtbJzW', NULL, NULL, '', NULL, '', NULL, '', '', NULL, NULL, '{"provider": "email", "providers": ["email"]}', '{}', NULL, '2024-11-11 19:57:08.476079+00', '2024-11-11 19:57:08.477764+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
+	('00000000-0000-0000-0000-000000000000', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', 'authenticated', 'authenticated', 'christopheroverstreet@gmail.com', '$2a$10$st21pCbpvlwLFbBP1ayEGeTcCQAsT8lCqd6umolq1Zmrq9S4bKwqO', '2024-11-13 20:04:11.031592+00', NULL, '', NULL, '', NULL, '', '', NULL, '2024-11-13 20:04:11.040826+00', '{"role": "owner", "provider": "email", "providers": ["email"], "tenant_id": "A8q3zo"}', '{"sub": "0a1ebb47-1503-41cb-9a13-e55cd7c05fe8", "email": "christopheroverstreet@gmail.com", "last_name": "Overstreet", "first_name": "Chris", "email_verified": false, "phone_verified": false}', NULL, '2024-11-13 20:04:11.028854+00', '2024-11-13 20:04:12.632759+00', NULL, NULL, '', '', NULL, '', 0, NULL, '', NULL, false, NULL, false);
 
 
 --
@@ -265,8 +303,7 @@ INSERT INTO "auth"."users" ("instance_id", "id", "aud", "role", "email", "encryp
 --
 
 INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "provider", "last_sign_in_at", "created_at", "updated_at", "id") VALUES
-	('ca42de27-cf53-448b-a358-7012316e4aca', 'ca42de27-cf53-448b-a358-7012316e4aca', '{"sub": "ca42de27-cf53-448b-a358-7012316e4aca", "email": "christopheroverstreet@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2024-11-11 18:42:34.182038+00', '2024-11-11 18:42:34.182061+00', '2024-11-11 18:42:34.182061+00', '7b0121a9-ba35-4d9a-b5d7-bec9d6dfde19'),
-	('97355939-99ea-46b9-9034-36ae11f93f93', '97355939-99ea-46b9-9034-36ae11f93f93', '{"sub": "97355939-99ea-46b9-9034-36ae11f93f93", "email": "john.doe@gmail.com", "email_verified": false, "phone_verified": false}', 'email', '2024-11-11 19:57:08.477035+00', '2024-11-11 19:57:08.477061+00', '2024-11-11 19:57:08.477061+00', '74404188-ca50-4c34-a4ea-5f7b5e183ff8');
+	('0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', '{"sub": "0a1ebb47-1503-41cb-9a13-e55cd7c05fe8", "email": "christopheroverstreet@gmail.com", "last_name": "Overstreet", "first_name": "Chris", "email_verified": false, "phone_verified": false}', 'email', '2024-11-13 20:04:11.030339+00', '2024-11-13 20:04:11.030357+00', '2024-11-13 20:04:11.030357+00', '22d770bb-e9aa-42ca-87cf-d5e8f3784c4a');
 
 
 --
@@ -280,8 +317,7 @@ INSERT INTO "auth"."identities" ("provider_id", "user_id", "identity_data", "pro
 --
 
 INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "factor_id", "aal", "not_after", "refreshed_at", "user_agent", "ip", "tag") VALUES
-	('c116b4b9-5d38-4f5a-b807-33deae957490', 'ca42de27-cf53-448b-a358-7012316e4aca', '2024-11-11 18:47:54.211902+00', '2024-11-11 23:07:01.742491+00', NULL, 'aal1', NULL, '2024-11-11 23:07:01.742464', 'node', '192.168.107.1', NULL),
-	('b2e5373d-7ae2-4197-958b-256b768ebac8', 'ca42de27-cf53-448b-a358-7012316e4aca', '2024-11-11 23:26:41.239002+00', '2024-11-12 00:40:32.793599+00', NULL, 'aal1', NULL, '2024-11-12 00:40:32.793519', 'node', '192.168.107.1', NULL);
+	('e1d4b375-b718-435e-af2b-f6bc2075e01f', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', '2024-11-13 20:04:11.040871+00', '2024-11-13 20:04:12.634261+00', NULL, 'aal1', NULL, '2024-11-13 20:04:12.634163', 'node', '192.168.107.1', NULL);
 
 
 --
@@ -289,8 +325,7 @@ INSERT INTO "auth"."sessions" ("id", "user_id", "created_at", "updated_at", "fac
 --
 
 INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "authentication_method", "id") VALUES
-	('c116b4b9-5d38-4f5a-b807-33deae957490', '2024-11-11 18:47:54.212626+00', '2024-11-11 18:47:54.212626+00', 'password', '3eafaeb4-9bd6-4fc0-b820-bd3977d9c816'),
-	('b2e5373d-7ae2-4197-958b-256b768ebac8', '2024-11-11 23:26:41.242938+00', '2024-11-11 23:26:41.242938+00', 'password', '6d8dda7d-cc99-4a69-90fe-183aa49da3f7');
+	('e1d4b375-b718-435e-af2b-f6bc2075e01f', '2024-11-13 20:04:11.041632+00', '2024-11-13 20:04:11.041632+00', 'password', '9ae5a2c3-ceef-47e3-9ea4-352f84e45835');
 
 
 --
@@ -316,14 +351,8 @@ INSERT INTO "auth"."mfa_amr_claims" ("session_id", "created_at", "updated_at", "
 --
 
 INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "revoked", "created_at", "updated_at", "parent", "session_id") VALUES
-	('00000000-0000-0000-0000-000000000000', 56, 'TeByk64YOEhcD_YgRGRYeA', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 18:47:54.212106+00', '2024-11-11 18:47:54.278995+00', NULL, 'c116b4b9-5d38-4f5a-b807-33deae957490'),
-	('00000000-0000-0000-0000-000000000000', 57, 'mJpnfKNNVgW-560fdeHkPQ', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 18:47:54.283447+00', '2024-11-11 19:48:09.363418+00', 'TeByk64YOEhcD_YgRGRYeA', 'c116b4b9-5d38-4f5a-b807-33deae957490'),
-	('00000000-0000-0000-0000-000000000000', 58, 'p5riG7izvCXUfnz8YYd6ZA', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 19:48:09.364118+00', '2024-11-11 21:54:05.645954+00', 'mJpnfKNNVgW-560fdeHkPQ', 'c116b4b9-5d38-4f5a-b807-33deae957490'),
-	('00000000-0000-0000-0000-000000000000', 59, 'uj0iV5og-j5NnXeHxFJhUw', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 21:54:05.646185+00', '2024-11-11 23:01:38.046527+00', 'p5riG7izvCXUfnz8YYd6ZA', 'c116b4b9-5d38-4f5a-b807-33deae957490'),
-	('00000000-0000-0000-0000-000000000000', 60, '6O9m1o4Gn4k6taUWJ673fw', 'ca42de27-cf53-448b-a358-7012316e4aca', false, '2024-11-11 23:01:38.046734+00', '2024-11-11 23:01:38.046734+00', 'uj0iV5og-j5NnXeHxFJhUw', 'c116b4b9-5d38-4f5a-b807-33deae957490'),
-	('00000000-0000-0000-0000-000000000000', 61, 'BWrQZx7Q1FtwK6UCgfnAoQ', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 23:26:41.242181+00', '2024-11-11 23:26:41.276687+00', NULL, 'b2e5373d-7ae2-4197-958b-256b768ebac8'),
-	('00000000-0000-0000-0000-000000000000', 62, 'RbJXOxuAMR_0yYkn9JpjvQ', 'ca42de27-cf53-448b-a358-7012316e4aca', true, '2024-11-11 23:26:41.276836+00', '2024-11-12 00:40:32.353173+00', 'BWrQZx7Q1FtwK6UCgfnAoQ', 'b2e5373d-7ae2-4197-958b-256b768ebac8'),
-	('00000000-0000-0000-0000-000000000000', 63, 'kjXMjmNPAk-F6CB83Jez-g', 'ca42de27-cf53-448b-a358-7012316e4aca', false, '2024-11-12 00:40:32.353528+00', '2024-11-12 00:40:32.353528+00', 'RbJXOxuAMR_0yYkn9JpjvQ', 'b2e5373d-7ae2-4197-958b-256b768ebac8');
+	('00000000-0000-0000-0000-000000000000', 70, 'rXxPcwf-vi9a5Uja_udj8w', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', true, '2024-11-13 20:04:11.041228+00', '2024-11-13 20:04:12.630693+00', NULL, 'e1d4b375-b718-435e-af2b-f6bc2075e01f'),
+	('00000000-0000-0000-0000-000000000000', 71, '-varCfmSpZZzKIlLz90ghw', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', false, '2024-11-13 20:04:12.631481+00', '2024-11-13 20:04:12.631481+00', 'rXxPcwf-vi9a5Uja_udj8w', 'e1d4b375-b718-435e-af2b-f6bc2075e01f');
 
 
 --
@@ -357,47 +386,33 @@ INSERT INTO "auth"."refresh_tokens" ("instance_id", "id", "token", "user_id", "r
 
 
 --
+-- Data for Name: platform_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."platform_profiles" ("id", "created_at", "updated_at", "first_name", "last_name") VALUES
+	('0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', '2024-11-13 20:04:11.106091+00', '2024-11-13 20:04:11.106091+00', 'Chris', 'Overstreet');
+
+
+--
 -- Data for Name: tenants; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."tenants" ("serial_id", "name", "added_by", "created_at", "updated_at") VALUES
-	(1, 'Demo', 'ca42de27-cf53-448b-a358-7012316e4aca', '2024-11-11 18:43:45.593524+00', '2024-11-11 18:43:45.593524+00');
+INSERT INTO "public"."tenants" ("serial_id", "created_at", "updated_at", "name") VALUES
+	(4, '2024-11-13 20:04:12.589634+00', '2024-11-13 20:04:12.589634+00', 'Demo');
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: tenant_memberships; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."users" ("id", "email", "phone", "created_at", "updated_at") VALUES
-	('97355939-99ea-46b9-9034-36ae11f93f93', 'john.doe@gmail.com', NULL, '2024-11-11 19:57:08.475832+00', '2024-11-11 19:57:08.475832+00'),
-	('ca42de27-cf53-448b-a358-7012316e4aca', 'christopheroverstreet@gmail.com', NULL, '2024-11-11 18:42:34.176691+00', '2024-11-11 18:42:34.176691+00');
-
-
---
--- Data for Name: tenant_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."tenant_profiles" ("serial_id", "tenant_id", "first_name", "last_name", "role", "avatar_url", "created_at", "updated_at", "user_id") VALUES
-	(1, '2W0Y46', 'Chris', 'Overstreet', 'owner', NULL, '2024-11-11 18:44:15.319496+00', '2024-11-11 18:44:15.319496+00', 'ca42de27-cf53-448b-a358-7012316e4aca'),
-	(4, '2W0Y46', 'John', 'Doe', 'parent', NULL, '2024-11-11 19:57:08.5012+00', '2024-11-11 19:57:08.5012+00', '97355939-99ea-46b9-9034-36ae11f93f93'),
-	(5, '2W0Y46', 'Ashley', 'Hughes', 'parent', NULL, '2024-11-11 23:18:09.751141+00', '2024-11-11 23:18:09.751141+00', NULL);
+INSERT INTO "public"."tenant_memberships" ("id", "tenant_id", "user_id", "role", "created_at") VALUES
+	(3, 'A8q3zo', '0a1ebb47-1503-41cb-9a13-e55cd7c05fe8', 'owner', '2024-11-13 20:04:12.606853+00');
 
 
 --
--- Data for Name: pets; Type: TABLE DATA; Schema: public; Owner: postgres
+-- Data for Name: tenant_user_profiles; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
-INSERT INTO "public"."pets" ("serial_id", "tenant_id", "name", "created_at", "updated_at", "avatar_url", "added_by") VALUES
-	(1, '2W0Y46', 'Mr. Bagel', '2024-11-11 22:29:10.52168+00', '2024-11-11 22:29:10.52168+00', NULL, NULL);
-
-
---
--- Data for Name: pet_parents; Type: TABLE DATA; Schema: public; Owner: postgres
---
-
-INSERT INTO "public"."pet_parents" ("id", "tenant_id", "pet_id", "created_at", "updated_at", "tenant_profile_id") VALUES
-	(1, '2W0Y46', 'RXRWJD', '2024-11-11 22:29:26.347502+00', '2024-11-11 22:29:26.347502+00', 'RXRWJD'),
-	(2, '2W0Y46', 'RXRWJD', '2024-11-11 23:27:39.007283+00', '2024-11-11 23:27:39.007283+00', '5XE2JN');
 
 
 --
@@ -440,7 +455,7 @@ INSERT INTO "public"."pet_parents" ("id", "tenant_id", "pet_id", "created_at", "
 -- Name: refresh_tokens_id_seq; Type: SEQUENCE SET; Schema: auth; Owner: supabase_auth_admin
 --
 
-SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 63, true);
+SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 71, true);
 
 
 --
@@ -451,31 +466,17 @@ SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 1, false);
 
 
 --
--- Name: pet_parents_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+-- Name: tenant_memberships_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."pet_parents_id_seq"', 2, true);
-
-
---
--- Name: pets_serial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."pets_serial_id_seq"', 1, true);
-
-
---
--- Name: tenant_profiles_serial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
---
-
-SELECT pg_catalog.setval('"public"."tenant_profiles_serial_id_seq"', 5, true);
+SELECT pg_catalog.setval('"public"."tenant_memberships_id_seq"', 3, true);
 
 
 --
 -- Name: tenants_serial_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('"public"."tenants_serial_id_seq"', 1, true);
+SELECT pg_catalog.setval('"public"."tenants_serial_id_seq"', 4, true);
 
 
 --

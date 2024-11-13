@@ -13,55 +13,58 @@ const addTenantAction = actionClient
   .schema(schema)
   .action(async ({ parsedInput: { name } }) => {
     const supabase = await getServerClient();
+
+    // Get the authenticated user
     const {
       data: { user },
     } = await supabase.auth.getUser();
     if (!user) {
-      throw new Error('Must be signed in');
+      throw new Error('Not authenticated');
     }
 
-    const { data: tenantData, error: tenantError } = await supabase
-      .from('tenants')
-      .insert({
-        name,
-      })
-      .select('id')
-      .single();
+    // Check platform access
+    const { data: hasPlatformAccess } = await supabase.rpc(
+      'has_platform_access',
+    );
+    if (!hasPlatformAccess) {
+      throw new Error('No platform access');
+    }
 
+    // Create tenant
+    const { data: tenant, error: tenantError } = await supabase
+      .from('tenants')
+      .insert({ name })
+      .select()
+      .single();
     if (tenantError) {
       throw tenantError;
     }
 
-    const supabaseAdmin = getAdminClient();
-
-    const { data: tenantUserData, error: tenantUserError } = await supabaseAdmin
-      .from('tenant_profiles')
+    // Create tenant membership
+    const { data: tenantMembership, error: membershipError } = await supabase
+      .from('tenant_memberships')
       .insert({
-        avatar_url: user.user_metadata.avatar_url,
-        first_name: user.app_metadata.first_name || 'Unknown',
-        last_name: user.app_metadata.last_name,
-        role: 'owner',
-        tenant_id: tenantData.id,
+        tenant_id: tenant.id,
         user_id: user.id,
+        role: 'owner',
       })
       .select('tenant_id, role')
       .single();
-
-    if (tenantUserError) {
-      // Clean up
-      await supabase.from('tenants').delete().eq('id', tenantData.id);
-
-      throw tenantUserError;
+    if (membershipError) {
+      throw membershipError;
     }
 
+    const supabaseAdmin = getAdminClient();
     await supabaseAdmin.auth.admin.updateUserById(user.id, {
       app_metadata: {
-        tenant_id: tenantUserData.tenant_id,
-        tenant_role: tenantUserData.role,
+        tenant_id: tenantMembership.tenant_id,
+        role: tenantMembership.role,
       },
     });
 
     await supabase.auth.refreshSession();
+
+    return tenant;
   });
 
 export default addTenantAction;
