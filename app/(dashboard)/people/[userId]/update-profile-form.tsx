@@ -21,6 +21,7 @@ import { toast } from 'sonner';
 import { z } from 'zod';
 
 const schema = z.object({
+  email: z.string().email().or(z.literal('')),
   firstName: z.string(),
   lastName: z.string(),
 });
@@ -28,19 +29,23 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function UpdateProfileForm({ data }: { data: PageData }) {
-  const { isPending, execute } = useAction(updateProfileAction, {
-    onSuccess: () => toast.success('Profile updated successfully'),
-    onError: ({ error }) =>
-      toast.error(error.serverError || 'Unexpected error'),
-  });
-
   const methods = useForm<FormValues>({
     values: {
-      firstName: data.first_name,
+      email: data.email ?? '',
+      firstName: data.first_name || '',
       lastName: data.last_name || '',
     },
-
     resolver: zodResolver(schema),
+  });
+
+  const { isPending, execute } = useAction(updateProfileAction, {
+    onSuccess: () => {
+      toast.success('Profile updated successfully');
+    },
+    onError: ({ error }) => {
+      console.log(error);
+      toast.error(error.serverError || 'Unexpected error');
+    },
   });
 
   return (
@@ -73,13 +78,27 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
               </FormItem>
             )}
           />
-          <FormItem className='space-y-2'>
-            <FormLabel>Email</FormLabel>
-            <Input disabled value={data.auth?.email || ''} />
-          </FormItem>
+          <FormField
+            control={methods.control}
+            name='email'
+            render={({ field }) => (
+              <FormItem className='space-y-2'>
+                <FormLabel>Email</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={!!data.auth_user_id}
+                    inputMode='email'
+                    {...field}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
           <FormItem className='space-y-2'>
             <FormLabel>Phone</FormLabel>
-            <Input disabled value={data.auth?.phone || ''} />
+            {/* TODO */}
+            <Input disabled value='' />
           </FormItem>
         </div>
         <FormItem className='space-y-2'>
@@ -120,6 +139,9 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
     }
     if (methods.formState.dirtyFields.lastName) {
       args.lastName = fv.lastName;
+    }
+    if (methods.formState.dirtyFields.email) {
+      args.email = fv.email;
     }
 
     execute(args);

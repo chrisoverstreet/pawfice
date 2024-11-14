@@ -16,7 +16,11 @@ export default async function Home() {
         <>
           {session.user.email}
           <SignOutButton />
-          <Link href='/get-started'>Get started</Link>
+          {session.user.app_metadata.tenant_id ? (
+            <Link href='/dashboard'>Dashboard</Link>
+          ) : (
+            <Link href='/get-started'>Get started</Link>
+          )}
           <pre>{JSON.stringify(session, null, `\t`)}</pre>
         </>
       ) : (
