@@ -27,7 +27,7 @@ export default function EditAvatarResponsiveDialog({
         <ResponsiveDialogHeader>
           <ResponsiveDialogTitle>Edit avatar</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
-            Click below to update image
+            Click below to upload avatar image
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
         <EditAvatarForm user={user} />
