@@ -21,6 +21,7 @@ import {
   parsePhoneNumberWithError,
 } from 'libphonenumber-js';
 import { useAction } from 'next-safe-action/hooks';
+import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
 import { z } from 'zod';
@@ -46,7 +47,9 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
       email: data.email ?? '',
       firstName: data.first_name || '',
       lastName: data.last_name || '',
-      phone: data.phone || '',
+      phone: data.phone
+        ? parsePhoneNumberWithError(data.phone, 'US').format('NATIONAL')
+        : '',
     },
     resolver: zodResolver(schema),
   });
@@ -56,7 +59,6 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
       toast.success('Profile updated successfully');
     },
     onError: ({ error }) => {
-      console.log(error);
       toast.error(error.serverError || 'Unexpected error');
     },
   });
@@ -114,19 +116,16 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
             render={({ field }) => (
               <FormItem className='space-y-2'>
                 <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  <Input
-                    disabled={!!data.auth_id}
-                    {...field}
-                    onChange={(e) => {
-                      methods.setValue(
-                        'email',
-                        new AsYouType('US').input(e.currentTarget.value),
-                      );
-                    }}
-                  />
+                <FormControl
+                  onChange={(e: FormEvent<HTMLInputElement>) => {
+                    methods.setValue(
+                      'phone',
+                      new AsYouType('US').input(e.currentTarget.value),
+                    );
+                  }}
+                >
+                  <Input disabled={!!data.auth_id} {...field} />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
             )}
@@ -173,6 +172,9 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
     }
     if (methods.formState.dirtyFields.email) {
       args.email = fv.email;
+    }
+    if (methods.formState.dirtyFields.phone) {
+      args.phone = fv.phone;
     }
 
     execute(args);

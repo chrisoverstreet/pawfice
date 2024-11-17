@@ -113,6 +113,53 @@ end;
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.create_user(p_first_name text, p_last_name text DEFAULT NULL::text, p_email text DEFAULT NULL::text, p_phone text DEFAULT NULL::text)
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+    v_tenant_id             bigint;
+    v_tenant_role           TEXT;
+    v_existing_auth_user_id UUID;
+    v_user_short_id         text;
+BEGIN
+    v_tenant_id := public.tenant_id();
+    v_tenant_role := public.tenant_role();
+
+    IF v_tenant_id is null or v_tenant_role NOT IN ('owner', 'admin') THEN
+        RAISE EXCEPTION 'Insufficient permissions';
+    END IF;
+
+    -- If email is provided, check if auth user exists
+    IF p_email IS NOT NULL THEN
+        SELECT id
+        INTO v_existing_auth_user_id
+        FROM auth.users
+        WHERE auth.users.email = p_email;
+    END IF;
+
+    -- Create tenant user profile
+    INSERT INTO public.users (auth_id,
+                              tenant_id,
+                              first_name,
+                              last_name,
+                              phone,
+                              role)
+    VALUES (v_existing_auth_user_id,
+            v_tenant_id,
+            p_first_name,
+            p_last_name,
+            p_phone,
+            'parent')
+    RETURNING short_id INTO v_user_short_id;
+
+    RETURN v_user_short_id;
+END;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.custom_access_token_hook(event jsonb)
  RETURNS jsonb
  LANGUAGE plpgsql
@@ -191,6 +238,7 @@ CREATE OR REPLACE FUNCTION public.format_user_for_typesense(user_short_id text)
 AS $function$
 declare
   result json;
+  clean_phone text;
 begin
   select
     json_build_object(
@@ -216,12 +264,22 @@ begin
       end,
       'phone', case
         when u.phone is null then null
-        else array[
-          u.phone, -- Original format
-          regexp_replace(u.phone, '[^0-9]', '', 'g'), -- All numbers
-          regexp_replace(regexp_replace(u.phone, '^\\+1', '', 'g'), '[^0-9]', '', 'g'), -- Without country code
-          regexp_replace(regexp_replace(regexp_replace(u.phone, '^\\+1', '', 'g'), '^[0-9]{3}', '', 'g'), '[^0-9]', '', 'g') -- Just last 7 digits
-        ]
+        else (
+          with phone_formats as (
+            select
+              u.phone as original,
+              nullif(regexp_replace(u.phone, '[^0-9]', '', 'g'), '') as all_numbers,
+              nullif(substring(regexp_replace(u.phone, '[^0-9]', '', 'g'), 2), '') as without_country_code,
+              nullif(substring(regexp_replace(u.phone, '[^0-9]', '', 'g'), 5), '') as last_seven
+          )
+          select array_remove(array[
+            original,
+            all_numbers,
+            without_country_code,
+            last_seven
+          ], null)
+          from phone_formats
+        )
       end,
       'role', u.role::text,
       'tenant_id', encode_id('tenants', u.tenant_id),
@@ -279,6 +337,39 @@ begin
     )
   from public.users u;
 end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.link_customer_to_auth_user(p_user_id bigint)
+ RETURNS boolean
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$
+DECLARE
+    v_tenant_id bigint;
+    v_auth_user_id UUID;
+BEGIN
+    v_tenant_id := public.tenant_id();
+
+    IF v_tenant_id IS NULL then
+        RAISE EXCEPTION 'Missing tenant id';
+    end if;
+
+    v_auth_user_id := auth.uid();
+
+    IF v_auth_user_id IS NULL THEN
+        RAISE EXCEPTION 'Not authenticated';
+    END IF;
+
+    UPDATE public.users u
+    SET auth_id = v_auth_user_id
+    WHERE u.id = p_user_id
+      AND u.tenant_id = v_tenant_id
+      AND u.auth_id IS NULL;
+
+    RETURN FOUND;
+END;
 $function$
 ;
 
@@ -385,6 +476,18 @@ begin
 
     return event;
 end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.test_phone_formatting(phone_number text)
+ RETURNS TABLE(original text, all_numbers text, without_country_code text, last_seven text)
+ LANGUAGE sql
+AS $function$
+  select
+    phone_number as original,
+    regexp_replace(phone_number, '[^0-9]', '', 'g') as all_numbers,
+    substring(regexp_replace(phone_number, '[^0-9]', '', 'g'), 2) as without_country_code,
+    substring(regexp_replace(phone_number, '[^0-9]', '', 'g'), 5) as last_seven;
 $function$
 ;
 

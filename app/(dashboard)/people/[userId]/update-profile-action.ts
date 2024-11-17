@@ -30,7 +30,7 @@ const schema = z.object({
     ),
 });
 
-export type UpdateProfileActionArgs = z.infer<typeof schema>;
+export type UpdateProfileActionArgs = z.input<typeof schema>;
 
 const updateProfileAction = actionClient
   .schema(schema)
@@ -38,7 +38,12 @@ const updateProfileAction = actionClient
     async ({
       parsedInput: { userShortId, email, lastName, firstName, phone },
     }) => {
-      if (!email && lastName === undefined && firstName === undefined) {
+      if (
+        !email &&
+        lastName === undefined &&
+        firstName === undefined &&
+        !phone
+      ) {
         return;
       }
 

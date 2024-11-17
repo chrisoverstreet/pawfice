@@ -16,6 +16,7 @@ import useTransformedImage from '@/hooks/use-transformed-image';
 import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import useScopedSearchKey from '@/utils/typesense/use-scoped-search-key';
 import { useInfiniteQuery } from '@tanstack/react-query';
+import { parsePhoneNumberWithError } from 'libphonenumber-js';
 import { ChevronDown, User } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
@@ -197,7 +198,12 @@ function Hit({
           <span className='flex items-center'>
             <User className='h-3 w-3 mr-1 flex-shrink-0' />
             <span className='truncate'>
-              {hit.document.phone?.length ? hit.document.phone[0] : 'N/A'}
+              {hit.document.phone?.[0]
+                ? parsePhoneNumberWithError(hit.document.phone[0], 'US').format(
+                    'NATIONAL',
+                  )
+                : ''}
+              p
             </span>
           </span>
         </TableCell>
