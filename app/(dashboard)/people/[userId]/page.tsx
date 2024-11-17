@@ -1,4 +1,5 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
+import AddPetResponsiveDialog from '@/app/(dashboard)/people/[userId]/add-pet-responsive-dialog';
 import ContentTabs from '@/app/(dashboard)/people/[userId]/content-tabs';
 import EditAvatarResponsiveDialog from '@/app/(dashboard)/people/[userId]/edit-avatar-responsive-dialog';
 import getPageData from '@/app/(dashboard)/people/[userId]/get-page-data';
@@ -70,6 +71,7 @@ export default async function UserPage({
         <ContentTabs data={data} />
       </DashboardPage>
       <EditAvatarResponsiveDialog user={data} />
+      <AddPetResponsiveDialog user={data} />
     </>
   );
 }

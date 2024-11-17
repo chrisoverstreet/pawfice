@@ -593,6 +593,14 @@ INSERT INTO "public"."tenants" ("id", "name", "created_by", "created_at", "updat
 
 
 --
+-- Data for Name: pets; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."pets" ("id", "tenant_id", "name", "avatar_url", "created_at", "updated_at") VALUES
+	(1, 43, 'Mr. Bagel', NULL, '2024-11-17 22:21:38.368877+00', '2024-11-17 22:21:38.368877+00');
+
+
+--
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
@@ -602,6 +610,14 @@ INSERT INTO "public"."users" ("id", "tenant_id", "auth_id", "first_name", "last_
 	(43, 43, NULL, 'Test', 'Test', NULL, false, NULL, false, NULL, 'parent', '2024-11-17 21:32:58.291914+00', '2024-11-17 21:32:58.291914+00'),
 	(44, 43, NULL, 'Test', 'Test', NULL, false, NULL, false, NULL, 'parent', '2024-11-17 21:33:31.709388+00', '2024-11-17 21:33:31.709388+00'),
 	(45, 43, NULL, 'Tester', 'Test', 'chris@test.co', false, '+15409318153', false, NULL, 'parent', '2024-11-17 21:33:53.814274+00', '2024-11-17 21:33:53.814274+00');
+
+
+--
+-- Data for Name: pet_parents; Type: TABLE DATA; Schema: public; Owner: postgres
+--
+
+INSERT INTO "public"."pet_parents" ("id", "tenant_id", "pet_id", "user_id", "created_at") VALUES
+	(1, 43, 1, 40, '2024-11-17 22:21:38.408824+00');
 
 
 --
@@ -658,6 +674,20 @@ SELECT pg_catalog.setval('"auth"."refresh_tokens_id_seq"', 282, true);
 --
 
 SELECT pg_catalog.setval('"pgsodium"."key_key_id_seq"', 1, false);
+
+
+--
+-- Name: pet_parents_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."pet_parents_id_seq"', 1, true);
+
+
+--
+-- Name: pets_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('"public"."pets_id_seq"', 1, true);
 
 
 --

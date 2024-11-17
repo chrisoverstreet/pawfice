@@ -1,7 +1,7 @@
 'use client';
 
-import EditAvatarForm from '@/app/(dashboard)/people/[userId]/edit-avatar-form';
-import { PageData } from '@/app/(dashboard)/people/[userId]/get-page-data';
+import AddPetForm from '@/app/(dashboard)/people/[userId]/add-pet-form';
+import type { PageData } from '@/app/(dashboard)/people/[userId]/get-page-data';
 import useUserPageModal from '@/app/(dashboard)/people/[userId]/use-user-page-modal';
 import {
   ResponsiveDialog,
@@ -11,26 +11,26 @@ import {
   ResponsiveDialogTitle,
 } from '@/components/responsive-dialog';
 
-export default function EditAvatarResponsiveDialog({
+export default function AddPetResponsiveDialog({
   user,
 }: {
-  user: Pick<PageData, 'avatar_url' | 'id' | 'short_id'>;
+  user: Pick<PageData, 'id'>;
 }) {
   const [modal, setModal] = useUserPageModal();
 
   return (
     <ResponsiveDialog
-      open={modal === 'edit-avatar'}
-      onOpenChange={(open) => setModal(open ? 'edit-avatar' : null)}
+      open={modal === 'add-pet'}
+      onOpenChange={(open) => setModal(open ? 'add-pet' : null)}
     >
       <ResponsiveDialogContent>
         <ResponsiveDialogHeader>
-          <ResponsiveDialogTitle>Edit avatar</ResponsiveDialogTitle>
+          <ResponsiveDialogTitle>Add pet</ResponsiveDialogTitle>
           <ResponsiveDialogDescription>
-            Click below to upload avatar image
+            Fill out form to add a new pet
           </ResponsiveDialogDescription>
         </ResponsiveDialogHeader>
-        <EditAvatarForm user={user} />
+        <AddPetForm user={user} />
       </ResponsiveDialogContent>
     </ResponsiveDialog>
   );

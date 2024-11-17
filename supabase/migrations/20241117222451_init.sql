@@ -3,9 +3,33 @@ create extension if not exists "pg_hashids" with schema "extensions";
 
 create type "public"."tenant_role" as enum ('owner', 'admin', 'parent');
 
+create sequence "public"."pet_parents_id_seq";
+
+create sequence "public"."pets_id_seq";
+
 create sequence "public"."tenants_id_seq";
 
 create sequence "public"."users_id_seq";
+
+create table "public"."pet_parents" (
+    "id" integer not null default nextval('pet_parents_id_seq'::regclass),
+    "tenant_id" bigint default tenant_id(),
+    "pet_id" bigint,
+    "user_id" bigint,
+    "created_at" timestamp with time zone not null default now()
+);
+
+
+create table "public"."pets" (
+    "id" integer not null default nextval('pets_id_seq'::regclass),
+    "short_id" text not null generated always as (encode_id('pets'::text, (id)::bigint)) stored,
+    "tenant_id" bigint default tenant_id(),
+    "name" text not null,
+    "avatar_url" text,
+    "created_at" timestamp with time zone not null default now(),
+    "updated_at" timestamp with time zone not null default now()
+);
+
 
 create table "public"."tenants" (
     "id" integer not null default nextval('tenants_id_seq'::regclass),
@@ -49,17 +73,41 @@ END) stored
 );
 
 
+alter sequence "public"."pet_parents_id_seq" owned by "public"."pet_parents"."id";
+
+alter sequence "public"."pets_id_seq" owned by "public"."pets"."id";
+
 alter sequence "public"."tenants_id_seq" owned by "public"."tenants"."id";
 
 alter sequence "public"."users_id_seq" owned by "public"."users"."id";
+
+CREATE UNIQUE INDEX pets_pkey ON public.pets USING btree (id);
 
 CREATE UNIQUE INDEX tenants_pkey ON public.tenants USING btree (id);
 
 CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);
 
+alter table "public"."pets" add constraint "pets_pkey" PRIMARY KEY using index "pets_pkey";
+
 alter table "public"."tenants" add constraint "tenants_pkey" PRIMARY KEY using index "tenants_pkey";
 
 alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
+
+alter table "public"."pet_parents" add constraint "pet_parents_pet_id_fkey" FOREIGN KEY (pet_id) REFERENCES pets(id) ON DELETE CASCADE not valid;
+
+alter table "public"."pet_parents" validate constraint "pet_parents_pet_id_fkey";
+
+alter table "public"."pet_parents" add constraint "pet_parents_tenant_id_fkey" FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE not valid;
+
+alter table "public"."pet_parents" validate constraint "pet_parents_tenant_id_fkey";
+
+alter table "public"."pet_parents" add constraint "pet_parents_user_id_fkey" FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE not valid;
+
+alter table "public"."pet_parents" validate constraint "pet_parents_user_id_fkey";
+
+alter table "public"."pets" add constraint "pets_tenant_id_fkey" FOREIGN KEY (tenant_id) REFERENCES tenants(id) ON DELETE CASCADE not valid;
+
+alter table "public"."pets" validate constraint "pets_tenant_id_fkey";
 
 alter table "public"."tenants" add constraint "tenants_created_by_fkey" FOREIGN KEY (created_by) REFERENCES auth.users(id) ON DELETE SET NULL not valid;
 
@@ -238,7 +286,6 @@ CREATE OR REPLACE FUNCTION public.format_user_for_typesense(user_short_id text)
 AS $function$
 declare
   result json;
-  clean_phone text;
 begin
   select
     json_build_object(
@@ -490,6 +537,90 @@ AS $function$
     substring(regexp_replace(phone_number, '[^0-9]', '', 'g'), 5) as last_seven;
 $function$
 ;
+
+grant delete on table "public"."pet_parents" to "anon";
+
+grant insert on table "public"."pet_parents" to "anon";
+
+grant references on table "public"."pet_parents" to "anon";
+
+grant select on table "public"."pet_parents" to "anon";
+
+grant trigger on table "public"."pet_parents" to "anon";
+
+grant truncate on table "public"."pet_parents" to "anon";
+
+grant update on table "public"."pet_parents" to "anon";
+
+grant delete on table "public"."pet_parents" to "authenticated";
+
+grant insert on table "public"."pet_parents" to "authenticated";
+
+grant references on table "public"."pet_parents" to "authenticated";
+
+grant select on table "public"."pet_parents" to "authenticated";
+
+grant trigger on table "public"."pet_parents" to "authenticated";
+
+grant truncate on table "public"."pet_parents" to "authenticated";
+
+grant update on table "public"."pet_parents" to "authenticated";
+
+grant delete on table "public"."pet_parents" to "service_role";
+
+grant insert on table "public"."pet_parents" to "service_role";
+
+grant references on table "public"."pet_parents" to "service_role";
+
+grant select on table "public"."pet_parents" to "service_role";
+
+grant trigger on table "public"."pet_parents" to "service_role";
+
+grant truncate on table "public"."pet_parents" to "service_role";
+
+grant update on table "public"."pet_parents" to "service_role";
+
+grant delete on table "public"."pets" to "anon";
+
+grant insert on table "public"."pets" to "anon";
+
+grant references on table "public"."pets" to "anon";
+
+grant select on table "public"."pets" to "anon";
+
+grant trigger on table "public"."pets" to "anon";
+
+grant truncate on table "public"."pets" to "anon";
+
+grant update on table "public"."pets" to "anon";
+
+grant delete on table "public"."pets" to "authenticated";
+
+grant insert on table "public"."pets" to "authenticated";
+
+grant references on table "public"."pets" to "authenticated";
+
+grant select on table "public"."pets" to "authenticated";
+
+grant trigger on table "public"."pets" to "authenticated";
+
+grant truncate on table "public"."pets" to "authenticated";
+
+grant update on table "public"."pets" to "authenticated";
+
+grant delete on table "public"."pets" to "service_role";
+
+grant insert on table "public"."pets" to "service_role";
+
+grant references on table "public"."pets" to "service_role";
+
+grant select on table "public"."pets" to "service_role";
+
+grant trigger on table "public"."pets" to "service_role";
+
+grant truncate on table "public"."pets" to "service_role";
+
+grant update on table "public"."pets" to "service_role";
 
 grant delete on table "public"."tenants" to "PUBLIC";
 
