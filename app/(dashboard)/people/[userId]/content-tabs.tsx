@@ -35,7 +35,7 @@ export default function ContentTabs({ data }: { data: PageData }) {
         <AdminUserInfo data={data} />
       </TabsContent>
       <TabsContent value='pets'>
-        <PetsTab />
+        <PetsTab pets={data.pets} />
       </TabsContent>
     </Tabs>
   );

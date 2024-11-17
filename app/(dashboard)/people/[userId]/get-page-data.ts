@@ -7,7 +7,7 @@ export default async function getPageData(userShortId: string) {
   const supabase = await getServerClient();
   return supabase
     .from('users')
-    .select('*')
+    .select('*, pets:pet_parents(profile:pets(*))')
     .eq('short_id', userShortId)
     .single();
 }

@@ -287,33 +287,36 @@ AS $function$
 declare
   result json;
 begin
-  select
+  with user_pets as (
+    select 
+      pp.user_id,
+      jsonb_agg(
+        jsonb_build_object(
+          'avatar_url', p.avatar_url,
+          'id', p.short_id,
+          'name', p.name
+        )
+      ) as pets
+    from pet_parents pp
+    join pets p on p.id = pp.pet_id
+    where pp.user_id = (select id from users where short_id = user_short_id)
+    group by pp.user_id
+  )
+  select 
     json_build_object(
       'avatar_url', u.avatar_url,
       'created_at', extract(epoch from u.created_at)::int,
       'email', u.email,
       'first_name', u.first_name,
       'id', u.short_id,
-      'initials', case
-        when u.first_name is not null and u.last_name is not null
-        then upper(left(u.first_name, 1) || left(u.last_name, 1))
-        else null
-      end,
+      'initials', u.initials,
       'last_name', u.last_name,
-      'name', case
-        when u.first_name is not null and u.last_name is not null
-        then u.first_name || ' ' || u.last_name
-        when u.first_name is not null
-        then u.first_name
-        when u.last_name is not null
-        then u.last_name
-        else null
-      end,
-      'phone', case
+      'name', u.name,
+      'phone', case 
         when u.phone is null then null
         else (
           with phone_formats as (
-            select
+            select 
               u.phone as original,
               nullif(regexp_replace(u.phone, '[^0-9]', '', 'g'), '') as all_numbers,
               nullif(substring(regexp_replace(u.phone, '[^0-9]', '', 'g'), 2), '') as without_country_code,
@@ -330,11 +333,13 @@ begin
       end,
       'role', u.role::text,
       'tenant_id', encode_id('tenants', u.tenant_id),
-      'user_id', (select id::text from auth.users where auth.users.id = u.auth_id)
+      'user_id', (select id::text from auth.users where auth.users.id = u.auth_id),
+      'pets', coalesce(up.pets, '[]'::jsonb)
     ) into result
   from public.users u
+  left join user_pets up on up.user_id = u.id
   where u.short_id = user_short_id;
-
+  
   return result;
 end;
 $function$
@@ -347,42 +352,56 @@ CREATE OR REPLACE FUNCTION public.format_users_for_typesense()
 AS $function$
 begin
   return query
-  select
+  with user_pets as (
+    select 
+      pp.user_id,
+      jsonb_agg(
+        jsonb_build_object(
+          'avatar_url', p.avatar_url,
+          'id', p.short_id,
+          'name', p.name
+        )
+      ) as pets
+    from pet_parents pp
+    join pets p on p.id = pp.pet_id
+    group by pp.user_id
+  )
+  select 
     json_build_object(
       'avatar_url', u.avatar_url,
       'created_at', extract(epoch from u.created_at)::int,
       'email', u.email,
       'first_name', u.first_name,
       'id', u.short_id,
-      'initials', case
-        when u.first_name is not null and u.last_name is not null
-        then upper(left(u.first_name, 1) || left(u.last_name, 1))
-        else null
-      end,
+      'initials', u.initials,
       'last_name', u.last_name,
-      'name', case
-        when u.first_name is not null and u.last_name is not null
-        then u.first_name || ' ' || u.last_name
-        when u.first_name is not null
-        then u.first_name
-        when u.last_name is not null
-        then u.last_name
-        else null
-      end,
-      'phone', case
-        when u.phone is null or u.phone = '' then null
-        else array[
-          u.phone, -- Original format
-          regexp_replace(u.phone, '[^0-9]', '', 'g'), -- All numbers
-          regexp_replace(regexp_replace(u.phone, '^\\+1', '', 'g'), '[^0-9]', '', 'g'), -- Without country code
-          regexp_replace(regexp_replace(regexp_replace(u.phone, '^\\+1', '', 'g'), '^[0-9]{3}', '', 'g'), '[^0-9]', '', 'g') -- Just last 7 digits
-        ]
+      'name', u.name,
+      'phone', case 
+        when u.phone is null then null
+        else (
+          with phone_formats as (
+            select 
+              u.phone as original,
+              nullif(regexp_replace(u.phone, '[^0-9]', '', 'g'), '') as all_numbers,
+              nullif(substring(regexp_replace(u.phone, '[^0-9]', '', 'g'), 2), '') as without_country_code,
+              nullif(substring(regexp_replace(u.phone, '[^0-9]', '', 'g'), 5), '') as last_seven
+          )
+          select array_remove(array[
+            original,
+            all_numbers,
+            without_country_code,
+            last_seven
+          ], null)
+          from phone_formats
+        )
       end,
       'role', u.role::text,
       'tenant_id', encode_id('tenants', u.tenant_id),
-      'user_id', (select id::text from auth.users where auth.users.id = u.auth_id)
+      'user_id', (select id::text from auth.users where auth.users.id = u.auth_id),
+      'pets', coalesce(up.pets, '[]'::jsonb)
     )
-  from public.users u;
+  from public.users u
+  left join user_pets up on up.user_id = u.id;
 end;
 $function$
 ;

@@ -21,6 +21,26 @@ async function reset() {
   }
 
   await typesense.collections().create({
+    name: 'pets',
+    enable_nested_fields: true,
+    fields: [
+      { name: 'avatar_url', type: 'string', optional: true, index: false },
+      { name: 'created_at', type: 'int32', index: false },
+      { name: 'name', type: 'string' },
+      { name: 'tenant_id', type: 'string' },
+      { name: 'parents', type: 'object[]' },
+      {
+        name: 'parents.avatar_url',
+        type: 'string',
+        optional: true,
+        index: false,
+      },
+      { name: 'parents.id', type: 'string[]' },
+      { name: 'parents.name', type: 'string[]' },
+    ],
+  });
+
+  await typesense.collections().create({
     name: 'users',
     enable_nested_fields: true,
     fields: [
@@ -36,11 +56,22 @@ async function reset() {
       { name: 'role', type: 'string', facet: true },
       { name: 'tenant_id', type: 'string' },
       { name: 'user_id', type: 'string', optional: true },
+      { name: 'pets', type: 'object[]', optional: true },
+      { name: 'pets.avatar_url', type: 'string', optional: true, index: false },
+      { name: 'pets.id', type: 'string[]', optional: true },
+      { name: 'pets.name', type: 'string[]', optional: true },
     ],
     token_separators: ['(', ')', '-', '+', '@', '.'],
   });
 
   const supabase = getAdminClient();
+
+  const petsSearchKey = await typesense.keys().create({
+    actions: ['documents:search'],
+    collections: ['pets'],
+    description: 'Pets search key',
+  });
+  invariant(petsSearchKey.value, 'Failed ot create pets search key');
 
   const tenantProfilesSearchKey = await typesense.keys().create({
     actions: ['documents:search'],
@@ -53,8 +84,20 @@ async function reset() {
 
   // TODO
   console.log({
+    petsSearchKey,
     tenantProfilesSearchKey,
   });
+
+  // const petInserts = await supabase
+  //   .rpc('format_pets_for_typesense')
+  //   .then(({ data }) => z.array(petDocumentSchema).parse(data));
+  //
+  // if (petInserts.length) {
+  //   await typesense
+  //     .collections('pets')
+  //     .documents()
+  //     .import(petInserts, { action: 'create', return_doc: true });
+  // }
 
   const tenantProfileInserts = await supabase
     .rpc('format_users_for_typesense')

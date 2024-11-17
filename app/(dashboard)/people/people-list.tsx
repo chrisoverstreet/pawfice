@@ -17,7 +17,7 @@ import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import useScopedSearchKey from '@/utils/typesense/use-scoped-search-key';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { parsePhoneNumberWithError } from 'libphonenumber-js';
-import { ChevronDown, User } from 'lucide-react';
+import { ChevronDown, PawPrint, User } from 'lucide-react';
 import Link from 'next/link';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { SearchClient } from 'typesense';
@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 export default function PeopleList() {
   // TODO hard-coded
-  const searchKey = useScopedSearchKey('77t5wo33bTa7ZXpHBgm5chKptZtjNjjF');
+  const searchKey = useScopedSearchKey('ROG3ajkUNo4TEW2ins0e6zEtCL3bH2oq');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
@@ -49,7 +49,7 @@ export default function PeopleList() {
           .search(
             {
               q: debouncedQ,
-              query_by: ['name', 'email', 'phone'],
+              query_by: ['name', 'email', 'phone', 'pets.name'],
               facet_by: ['role'],
               page: pageParam,
             },
@@ -203,40 +203,39 @@ function Hit({
                     'NATIONAL',
                   )
                 : ''}
-              p
             </span>
           </span>
         </TableCell>
         <TableCell>
           <div className='flex items-center justify-between'>
             <div className='flex items-center space-x-2 max-w-full'>
-              {/*{!!hit.document.pets.length && (*/}
-              {/*  <PawPrint className='h-3 w-3 flex-shrink-0' />*/}
-              {/*)}*/}
-              {/*<div className='flex -space-x-2 overflow-hidden flex-shrink-0'>*/}
-              {/*  {hit.document.pets.map((pet) => (*/}
-              {/*    <Avatar*/}
-              {/*      key={pet.id}*/}
-              {/*      className='w-6 h-6 border-2 border-background'*/}
-              {/*    >*/}
-              {/*      <AvatarImage*/}
-              {/*        src={pet.avatar_url ?? undefined}*/}
-              {/*        alt={pet.name}*/}
-              {/*      />*/}
-              {/*      <AvatarFallback>{pet.name[0]}</AvatarFallback>*/}
-              {/*    </Avatar>*/}
-              {/*  ))}*/}
-              {/*</div>*/}
+              {!!hit.document.pets?.length && (
+                <PawPrint className='h-3 w-3 flex-shrink-0' />
+              )}
+              <div className='flex -space-x-2 overflow-hidden flex-shrink-0'>
+                {hit.document.pets?.map((pet) => (
+                  <Avatar
+                    key={pet.id}
+                    className='w-6 h-6 border-2 border-background'
+                  >
+                    <AvatarImage
+                      src={pet.avatar_url ?? undefined}
+                      alt={pet.name}
+                    />
+                    <AvatarFallback>{pet.name[0]}</AvatarFallback>
+                  </Avatar>
+                ))}
+              </div>
               <div className='truncate hidden sm:inline-block max-w-[150px]'>
-                {/*{hit.document.pets.map((pet) => (*/}
-                {/*  <Link*/}
-                {/*    className='inline hover:underline'*/}
-                {/*    key={pet.id}*/}
-                {/*    href={`/pets/${pet.id}`}*/}
-                {/*  >*/}
-                {/*    {pet.name}*/}
-                {/*  </Link>*/}
-                {/*))}*/}
+                {hit.document.pets?.map((pet) => (
+                  <Link
+                    className='inline hover:underline'
+                    key={pet.id}
+                    href={`/pets/${pet.id}`}
+                  >
+                    {pet.name}
+                  </Link>
+                ))}
               </div>
             </div>
             <ChevronDown className='h-4 w-4 flex-shrink-0 md:hidden' />
