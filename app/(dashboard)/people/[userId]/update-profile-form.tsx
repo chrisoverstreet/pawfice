@@ -15,6 +15,11 @@ import {
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
+import {
+  AsYouType,
+  isValidPhoneNumber,
+  parsePhoneNumberWithError,
+} from 'libphonenumber-js';
 import { useAction } from 'next-safe-action/hooks';
 import { useForm } from 'react-hook-form';
 import { toast } from 'sonner';
@@ -24,9 +29,16 @@ const schema = z.object({
   email: z.string().email().or(z.literal('')),
   firstName: z.string(),
   lastName: z.string(),
+  phone: z
+    .string()
+    .refine((p) => isValidPhoneNumber(p, 'US'))
+    .or(z.literal(''))
+    .transform((p) =>
+      p ? parsePhoneNumberWithError(p, 'US').number : undefined,
+    ),
 });
 
-type FormValues = z.infer<typeof schema>;
+type FormValues = z.input<typeof schema>;
 
 export default function UpdateProfileForm({ data }: { data: PageData }) {
   const methods = useForm<FormValues>({
@@ -34,6 +46,7 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
       email: data.email ?? '',
       firstName: data.first_name || '',
       lastName: data.last_name || '',
+      phone: data.phone || '',
     },
     resolver: zodResolver(schema),
   });
@@ -95,11 +108,29 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
               </FormItem>
             )}
           />
-          <FormItem className='space-y-2'>
-            <FormLabel>Phone</FormLabel>
-            {/* TODO */}
-            <Input disabled value='' />
-          </FormItem>
+          <FormField
+            control={methods.control}
+            name='phone'
+            render={({ field }) => (
+              <FormItem className='space-y-2'>
+                <FormLabel>Phone</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={!!data.auth_id}
+                    {...field}
+                    onChange={(e) => {
+                      methods.setValue(
+                        'email',
+                        new AsYouType('US').input(e.currentTarget.value),
+                      );
+                    }}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
         </div>
         <FormItem className='space-y-2'>
           <FormLabel>User ID</FormLabel>
