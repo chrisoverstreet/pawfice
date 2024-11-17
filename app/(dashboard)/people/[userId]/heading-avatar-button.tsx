@@ -27,7 +27,7 @@ export default function HeadingAvatarButton({
       role='button'
       onClick={() => setModal('edit-avatar')}
     >
-      <AvatarImage src={url} alt={user.name} />
+      <AvatarImage src={url} alt={user.name ?? undefined} />
       <AvatarFallback className='text-2xl'>{user.initials}</AvatarFallback>
     </Avatar>
   );

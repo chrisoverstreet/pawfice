@@ -1,5 +1,5 @@
 import { getAdminClient } from '@/lib/supabase/get-admin-client';
-import { tenantUserProfileDocumentSchema } from '@/lib/typesense/document-schemas';
+import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
 import invariant from 'invariant';
 import { z } from 'zod';
@@ -20,28 +20,8 @@ async function reset() {
     await typesense.collections(collection.name).delete();
   }
 
-  // await typesense.collections().create({
-  //   name: 'pets',
-  //   enable_nested_fields: true,
-  //   fields: [
-  //     { name: 'avatar_url', type: 'string', optional: true, index: false },
-  //     { name: 'created_at', type: 'int32', index: false },
-  //     { name: 'name', type: 'string' },
-  //     { name: 'tenant_id', type: 'string' },
-  //     { name: 'parents', type: 'object[]' },
-  //     {
-  //       name: 'parents.avatar_url',
-  //       type: 'string',
-  //       optional: true,
-  //       index: false,
-  //     },
-  //     { name: 'parents.id', type: 'string[]' },
-  //     { name: 'parents.name', type: 'string[]' },
-  //   ],
-  // });
-
   await typesense.collections().create({
-    name: 'tenant_profiles',
+    name: 'users',
     enable_nested_fields: true,
     fields: [
       { name: 'avatar_url', type: 'string', optional: true, index: false },
@@ -56,66 +36,40 @@ async function reset() {
       { name: 'role', type: 'string', facet: true },
       { name: 'tenant_id', type: 'string' },
       { name: 'user_id', type: 'string', optional: true },
-      // { name: 'pets', type: 'object[]', optional: true },
-      // { name: 'pets.avatar_url', type: 'string', optional: true, index: false },
-      // { name: 'pets.id', type: 'string[]', optional: true },
-      // { name: 'pets.name', type: 'string[]', optional: true },
     ],
     token_separators: ['(', ')', '-', '+', '@', '.'],
   });
 
   const supabase = getAdminClient();
 
-  // const petsSearchKey = await typesense.keys().create({
-  //   actions: ['documents:search'],
-  //   collections: ['pets'],
-  //   description: 'Pets search key',
-  // });
-  // invariant(petsSearchKey.value, 'Failed ot create pets search key');
-
   const tenantProfilesSearchKey = await typesense.keys().create({
     actions: ['documents:search'],
-    collections: ['tenant_profiles'],
+    collections: ['users'],
     // TODO
     // expires_at: expiresAt,
-    description: 'Tenant profiles search key',
+    description: 'Users search key',
   });
-  invariant(
-    tenantProfilesSearchKey.value,
-    'Failed to create tenant profiles search key',
-  );
+  invariant(tenantProfilesSearchKey.value, 'Failed to create users search key');
 
   // TODO
   console.log({
-    // petsSearchKey,
     tenantProfilesSearchKey,
   });
 
   const tenantProfileInserts = await supabase
-    .rpc('get_tenant_user_profiles_for_typesense')
+    .rpc('format_users_for_typesense')
     .then((res) => {
       console.dir(res, { depth: 5 });
       return res;
     })
-    .then(({ data }) => z.array(tenantUserProfileDocumentSchema).parse(data));
+    .then(({ data }) => z.array(userDocumentSchema).parse(data));
 
   if (tenantProfileInserts.length) {
     await typesense
-      .collections('tenant_profiles')
+      .collections('users')
       .documents()
       .import(tenantProfileInserts, { action: 'create', return_doc: true });
   }
-
-  // const petInserts = await supabase
-  //   .rpc('get_pets_for_typesense')
-  //   .then(({ data }) => z.array(petDocumentSchema).parse(data));
-  //
-  // if (petInserts.length) {
-  //   await typesense
-  //     .collections('pets')
-  //     .documents()
-  //     .import(petInserts, { action: 'create', return_doc: true });
-  // }
 }
 
 reset();

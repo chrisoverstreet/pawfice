@@ -16,7 +16,7 @@ export const petDocumentSchema = z.object({
   ),
 });
 
-export const tenantUserProfileDocumentSchema = z.object({
+export const userDocumentSchema = z.object({
   avatar_url: z.string().nullish(),
   created_at: z.number().int(),
   email: z.string().email().nullish(),
@@ -26,16 +26,9 @@ export const tenantUserProfileDocumentSchema = z.object({
   last_name: z.string().nullish(),
   name: z.string().nullish(),
   phone: z.array(z.string()).nullish(),
-  role: z.enum(['owner', 'admin', 'staff', 'customer']) satisfies z.ZodType<
+  role: z.enum(['owner', 'admin', 'parent']) satisfies z.ZodType<
     Enums<'tenant_role'>
   >,
   tenant_id: z.string(),
   userId: z.string().nullish(),
-  // pets: z.array(
-  //   z.object({
-  //     avatar_url: z.string().nullish(),
-  //     id: z.string(),
-  //     name: z.string(),
-  //   }),
-  // ),
 });

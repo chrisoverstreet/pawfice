@@ -2,36 +2,33 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
-import { tenantUserProfileDocumentSchema } from '@/lib/typesense/document-schemas';
+import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
 import { z } from 'zod';
 
 const schema = z.object({
-  id: z.string(),
+  userShortId: z.string(),
 });
 
-const indexTenantProfileAction = actionClient
+const indexUserAction = actionClient
   .schema(schema)
-  .action(async ({ parsedInput: { id } }) => {
+  .action(async ({ parsedInput: { userShortId } }) => {
     const supabase = await getServerClient();
 
     const { data, error } = await supabase
-      .rpc('get_tenant_user_profile_for_typesense', { p_id: id })
+      .rpc('format_user_for_typesense', { user_short_id: userShortId })
       .single();
 
     const typesenseAdmin = getTypesenseAdminClient();
 
     if (error) {
-      await typesenseAdmin
-        .collections('tenant_profiles')
-        .documents(id)
-        .delete();
+      await typesenseAdmin.collections('users').documents(userShortId).delete();
     } else {
       await typesenseAdmin
-        .collections('tenant_profiles')
+        .collections('users')
         .documents()
-        .upsert(tenantUserProfileDocumentSchema.parse(data));
+        .upsert(userDocumentSchema.parse(data));
     }
   });
 
-export default indexTenantProfileAction;
+export default indexUserAction;

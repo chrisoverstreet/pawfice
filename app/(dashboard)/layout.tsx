@@ -14,6 +14,7 @@ import {
   SidebarRail,
 } from '@/components/ui/sidebar';
 import { getServerClient } from '@/lib/supabase/get-server-client';
+import decodeAccessToken from '@/utils/supabase/decode-access-token';
 import { Home, PawPrint, Users } from 'lucide-react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -48,14 +49,20 @@ export default async function DashboardLayout({
     data: { session },
   } = await supabase.auth.getSession();
 
-  if (!session?.user.app_metadata.tenant_id) {
-    return notFound();
+  if (!session?.user) {
+    notFound();
+  }
+
+  const tenantId = (await decodeAccessToken(session.access_token))?.tenant_id;
+
+  if (!tenantId) {
+    notFound();
   }
 
   const { data } = await supabase
     .from('tenants')
     .select('name')
-    .eq('id', session.user.app_metadata.tenant_id)
+    .eq('id', tenantId)
     .single();
 
   if (!data?.name) {

@@ -3,6 +3,7 @@
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
+import decodeAccessToken from '@/utils/supabase/decode-access-token';
 import invariant from 'invariant';
 import { z } from 'zod';
 
@@ -20,7 +21,8 @@ const getScopedSearchKeyAction = actionClient
       throw error;
     }
 
-    const tenantId = session?.user.app_metadata.tenant_id;
+    const tenantId = (await decodeAccessToken(session?.access_token))
+      ?.tenant_short_id;
     invariant(tenantId, 'Missing tenant id');
 
     const typesenseClient = getTypesenseAdminClient();

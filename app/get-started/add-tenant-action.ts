@@ -3,6 +3,8 @@
 import { actionClient } from '@/lib/safe-action';
 import { getAdminClient } from '@/lib/supabase/get-admin-client';
 import { getServerClient } from '@/lib/supabase/get-server-client';
+import indexUserAction from '@/utils/typesense/index-user-action';
+import { ServerError } from 'typesense/lib/Typesense/Errors';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -14,67 +16,58 @@ const addTenantAction = actionClient
   .action(async ({ parsedInput: { name } }) => {
     const supabase = await getServerClient();
 
-    // Get the authenticated user
     const {
       data: { user },
     } = await supabase.auth.getUser();
+
     if (!user) {
-      throw new Error('Not authenticated');
+      throw new ServerError('Must be signed in');
     }
 
-    // Check platform access
-    const { data: hasPlatformAccess } = await supabase.rpc(
-      'has_platform_access',
-    );
-    if (!hasPlatformAccess) {
-      throw new Error('No platform access');
-    }
-
-    // Create tenant
-    const { data: tenant, error: tenantError } = await supabase
+    const { data: tenant, error: insertTenantError } = await supabase
       .from('tenants')
-      .insert({ name })
-      .select()
+      .insert({
+        name,
+      })
+      .select('id, short_id')
       .single();
-    if (tenantError) {
-      throw tenantError;
+
+    if (insertTenantError) {
+      throw new ServerError(insertTenantError.message);
     }
 
-    // Get platform profile info
-    const { data: platformProfile, error: platformProfileError } =
-      await supabase
-        .from('platform_profiles')
-        .select('first_name, last_name')
-        .eq('id', user.id)
-        .single();
-    if (platformProfileError) {
-      throw platformProfileError;
-    }
-
-    // Create tenant user profile
-    const { data: tenantUserProfile, error: tenantUserProfileError } =
-      await supabase
-        .from('tenant_user_profiles')
+    const { data: tenantUserData, error: insertTenantUserError } =
+      await getAdminClient()
+        .from('users')
         .insert({
-          tenant_id: tenant.id,
-          id: user.id,
-          auth_user_id: user.id,
-          first_name: platformProfile.first_name,
-          last_name: platformProfile.last_name,
+          auth_id: user.id,
+          avatar_url:
+            user.user_metadata.avatar_url ||
+            user.user_metadata.avatar ||
+            user.user_metadata.picture,
+          email: user.email,
+          email_verified: !!user.email_confirmed_at,
+          first_name: user.user_metadata.first_name,
+          last_name: user.user_metadata.last_name,
+          phone: user.phone,
+          phone_verified: !!user.phone_confirmed_at,
           role: 'owner',
+          tenant_id: tenant.id,
         })
-        .select('tenant_id, role')
+        .select('short_id')
         .single();
-    if (tenantUserProfileError) {
-      throw tenantUserProfileError;
+
+    if (insertTenantUserError) {
+      await supabase.from('tenants').delete().eq('id', tenant.id);
+      throw new ServerError(insertTenantUserError.message);
     }
 
-    const supabaseAdmin = getAdminClient();
-    await supabaseAdmin.auth.admin.updateUserById(user.id, {
-      app_metadata: {
-        tenant_id: tenantUserProfile.tenant_id,
-        role: tenantUserProfile.role,
-      },
+    await indexUserAction({ userShortId: tenantUserData.short_id }).catch(
+      console.error,
+    );
+
+    await supabase.auth.updateUser({
+      data: { tenant_short_id: tenant.short_id },
     });
 
     await supabase.auth.refreshSession();

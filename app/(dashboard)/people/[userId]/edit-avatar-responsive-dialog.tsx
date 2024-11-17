@@ -14,7 +14,7 @@ import {
 export default function EditAvatarResponsiveDialog({
   user,
 }: {
-  user: Pick<PageData, 'avatar_url' | 'id'>;
+  user: Pick<PageData, 'avatar_url' | 'id' | 'short_id'>;
 }) {
   const [modal, setModal] = useUserPageModal();
 

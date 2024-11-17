@@ -2,7 +2,6 @@
 
 import AdminUserInfo from '@/app/(dashboard)/people/[userId]/admin-user-info';
 import { PageData } from '@/app/(dashboard)/people/[userId]/get-page-data';
-import PetGrid from '@/app/(dashboard)/people/[userId]/pet-grid';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { PawPrint, User } from 'lucide-react';
 import { parseAsStringEnum, useQueryState } from 'nuqs';
@@ -35,7 +34,7 @@ export default function ContentTabs({ data }: { data: PageData }) {
         <AdminUserInfo data={data} />
       </TabsContent>
       <TabsContent value='pets'>
-        <PetGrid pets={data.pets} />
+        <div>TODO</div>
       </TabsContent>
     </Tabs>
   );

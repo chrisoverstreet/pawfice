@@ -3,12 +3,12 @@
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import type { QueryData } from '@supabase/supabase-js';
 
-export default async function getPageData(userId: string) {
+export default async function getPageData(userShortId: string) {
   const supabase = await getServerClient();
   return supabase
-    .from('tenant_user_profiles')
+    .from('users')
     .select('*')
-    .eq('id', userId)
+    .eq('short_id', userShortId)
     .single();
 }
 

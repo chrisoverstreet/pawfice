@@ -1,9 +1,9 @@
 'use server';
 
 import { actionClient } from '@/lib/safe-action';
-import { getAdminClient } from '@/lib/supabase/get-admin-client';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import { redirect } from 'next/navigation';
+import { ServerError } from 'typesense/lib/Typesense/Errors';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -16,50 +16,18 @@ const loginAction = actionClient
   .action(async ({ parsedInput: { email, password } }) => {
     const supabase = await getServerClient();
 
-    const { data: authUser, error: signInError } =
-      await supabase.auth.signInWithPassword({ email, password });
-    if (signInError) {
-      throw signInError;
-    }
-
-    if (
-      authUser.user.app_metadata.tenant_id &&
-      authUser.user.app_metadata.role
-    ) {
-      const { error } = await supabase
-        .from('tenant_user_profiles')
-        .select('*')
-        .match({
-          user_id: authUser.user.id,
-          tenant_id: authUser.user.app_metadata.tenant_id,
-          role: authUser.user.app_metadata.role,
-        })
-        .single();
-      if (!error) {
-        redirect('/dashboard');
-      }
-    }
-
-    const { data: tenantUserProfile } = await supabase
-      .from('tenant_user_profiles')
-      .select('*')
-      .eq('user_id', authUser.user.id)
-      .limit(1)
-      .order('created_at', { ascending: false })
-      .single();
-
-    const supabaseAdmin = getAdminClient();
-
-    await supabaseAdmin.auth.admin.updateUserById(authUser.user.id, {
-      app_metadata: {
-        tenant_id: tenantUserProfile ? tenantUserProfile.tenant_id : undefined,
-        role: tenantUserProfile ? tenantUserProfile.role : undefined,
-      },
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
     });
 
-    await supabase.auth.refreshSession();
+    if (error) {
+      throw new ServerError(error.message);
+    }
 
-    redirect(tenantUserProfile ? '/dashboard' : '/get-started');
+    const tenantShortId = null;
+
+    redirect(tenantShortId ? '/dashboard' : '/get-started');
   });
 
 export default loginAction;

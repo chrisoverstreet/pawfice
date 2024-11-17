@@ -13,7 +13,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import useTransformedImage from '@/hooks/use-transformed-image';
-import { tenantUserProfileDocumentSchema } from '@/lib/typesense/document-schemas';
+import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import useScopedSearchKey from '@/utils/typesense/use-scoped-search-key';
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { ChevronDown, User } from 'lucide-react';
@@ -24,7 +24,8 @@ import { useDebounce } from 'use-debounce';
 import { z } from 'zod';
 
 export default function PeopleList() {
-  const searchKey = useScopedSearchKey('VOP9Wjg6O3bgrlQ4u93Pt0CDWV6ye646');
+  // TODO hard-coded
+  const searchKey = useScopedSearchKey('77t5wo33bTa7ZXpHBgm5chKptZtjNjjF');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
@@ -42,7 +43,7 @@ export default function PeopleList() {
         });
 
         return searchClient
-          .collections('tenant_profiles')
+          .collections('users')
           .documents()
           .search(
             {
@@ -95,7 +96,7 @@ export default function PeopleList() {
       z
         .array(
           z.object({
-            document: tenantUserProfileDocumentSchema.omit({
+            document: userDocumentSchema.omit({
               tenant_id: true,
             }),
           }),
@@ -146,10 +147,7 @@ function Hit({
   hit,
 }: {
   hit: {
-    document: Omit<
-      z.infer<typeof tenantUserProfileDocumentSchema>,
-      'tenant_id'
-    >;
+    document: Omit<z.infer<typeof userDocumentSchema>, 'tenant_id'>;
   };
 }) {
   const [expanded, setExpanded] = useState(false);

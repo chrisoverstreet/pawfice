@@ -86,7 +86,7 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
                 <FormLabel>Email</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={!!data.auth_user_id}
+                    disabled={!!data.auth_id}
                     inputMode='email'
                     {...field}
                   />
@@ -131,7 +131,7 @@ export default function UpdateProfileForm({ data }: { data: PageData }) {
 
   async function onSubmit(fv: FormValues) {
     const args: UpdateProfileActionArgs = {
-      tenantProfileId: data.id,
+      userShortId: data.short_id,
     };
 
     if (methods.formState.dirtyFields.firstName) {

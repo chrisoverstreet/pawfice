@@ -31,7 +31,7 @@ type FormValues = z.infer<typeof schema>;
 export default function EditAvatarForm({
   user,
 }: {
-  user: Pick<PageData, 'avatar_url' | 'id'>;
+  user: Pick<PageData, 'avatar_url' | 'id' | 'short_id'>;
 }) {
   const [, setModal] = useUserPageModal();
 
@@ -163,7 +163,7 @@ export default function EditAvatarForm({
         throw error || new Error();
       }
 
-      execute({ path: data.path, tenantProfileId: user.id });
+      execute({ path: data.path, userShortId: user.short_id });
     } catch (e) {
       toast.error((e instanceof Error && e.message) || 'Unexpected error');
     } finally {

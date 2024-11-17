@@ -2,45 +2,36 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
-import indexTenantProfileAction from '@/utils/typesense/index-tenant-profile-action';
+import indexUserAction from '@/utils/typesense/index-user-action';
 import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 const schema = z.object({
-  tenantProfileId: z.string(),
+  userShortId: z.string(),
   path: z.string(),
 });
 
 const editAvatarAction = actionClient
   .schema(schema)
-  .action(async ({ parsedInput: { tenantProfileId, path } }) => {
+  .action(async ({ parsedInput: { userShortId, path } }) => {
     const supabase = await getServerClient();
 
     const { error } = await supabase
-      .from('tenant_user_profiles')
+      .from('users')
       .update({
         avatar_url: supabase.storage.from('user_avatars').getPublicUrl(path)
           .data.publicUrl,
       })
-      .eq('id', tenantProfileId)
+      .eq('short_id', userShortId)
       .single();
 
     if (error) {
       throw error;
     }
 
-    // const petIds = await supabase
-    //   .from('pet_parents')
-    //   .select('pet_id')
-    //   .eq('tenant_profile_id', tenantProfileId)
-    //   .then(({ data }) => data?.map((pp) => pp.pet_id) ?? []);
+    await Promise.all([indexUserAction({ userShortId })]).catch(console.error);
 
-    await Promise.all([
-      indexTenantProfileAction({ id: tenantProfileId }),
-      // ...petIds.map((id) => indexPetAction({ id })),
-    ]).catch(console.error);
-
-    revalidatePath(`/people/${tenantProfileId}`);
+    revalidatePath(`/people/${userShortId}`);
   });
 
 export default editAvatarAction;
