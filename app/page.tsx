@@ -21,11 +21,13 @@ export default async function Home() {
         <>
           {session.user.email}
           <SignOutButton />
-          {session.user.app_metadata.tenant_id ? (
+          {!!accessToken?.tenant_role &&
+          ['owner', 'admin'].includes(accessToken.tenant_role) ? (
             <Link href='/dashboard'>Dashboard</Link>
           ) : (
             <Link href='/get-started'>Get started</Link>
           )}
+          <pre>{JSON.stringify(accessToken, null, `\t`)}</pre>
           <pre>{JSON.stringify(session, null, `\t`)}</pre>
         </>
       ) : (
