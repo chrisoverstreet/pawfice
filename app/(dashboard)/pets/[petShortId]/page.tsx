@@ -15,7 +15,11 @@ import { notFound } from 'next/navigation';
 
 const getPageData = async (petShortId: string) => {
   const supabase = await getServerClient();
-  return supabase.from('pets').select('*').eq('short_id', petShortId).single();
+  return supabase
+    .from('pets')
+    .select('*, parents:pet_parents(profile:users(*))')
+    .eq('short_id', petShortId)
+    .single();
 };
 export async function generateMetadata({
   params,

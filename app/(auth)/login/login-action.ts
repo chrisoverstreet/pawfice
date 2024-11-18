@@ -2,6 +2,7 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
+import decodeAccessToken from '@/utils/supabase/decode-access-token';
 import { redirect } from 'next/navigation';
 import { ServerError } from 'typesense/lib/Typesense/Errors';
 import { z } from 'zod';
@@ -16,7 +17,7 @@ const loginAction = actionClient
   .action(async ({ parsedInput: { email, password } }) => {
     const supabase = await getServerClient();
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email,
       password,
     });
@@ -25,9 +26,10 @@ const loginAction = actionClient
       throw new ServerError(error.message);
     }
 
-    const tenantShortId = null;
+    const tenantId = (await decodeAccessToken(data.session.access_token))
+      ?.tenant_id;
 
-    redirect(tenantShortId ? '/dashboard' : '/get-started');
+    redirect(tenantId ? '/dashboard' : '/get-started');
   });
 
 export default loginAction;
