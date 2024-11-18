@@ -69,27 +69,24 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <div>
-          <FormField
-            control={methods.control}
-            name='password'
-            render={({ field }) => (
-              <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
-                <FormLabel>Password</FormLabel>
-                <FormControl>
-                  <Input
-                    required
-                    type='password'
-                    placeholder='Enter your password'
-                    {...field}
-                  />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
-        </div>
-
+        <FormField
+          control={methods.control}
+          name='password'
+          render={({ field }) => (
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input
+                  required
+                  type='password'
+                  placeholder='Enter your password'
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
         <Button className='mt-2 w-full' loading={isPending} type='submit'>
           Sign In
         </Button>

@@ -46,14 +46,14 @@ export default function RegisterForm() {
   return (
     <Form {...methods}>
       <form
-        className='flex flex-col gap-4'
+        className='grid gap-4'
         onSubmit={methods.handleSubmit((fv) => execute(fv))}
       >
         <FormField
           control={methods.control}
           name='firstName'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>First name</FormLabel>
               <FormControl>
                 <Input autoFocus required {...field} />
@@ -66,7 +66,7 @@ export default function RegisterForm() {
           control={methods.control}
           name='lastName'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>Last name</FormLabel>
               <FormControl>
                 <Input {...field} />
@@ -79,7 +79,7 @@ export default function RegisterForm() {
           control={methods.control}
           name='email'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>Email</FormLabel>
               <FormControl>
                 <Input inputMode='email' required {...field} />
@@ -92,7 +92,7 @@ export default function RegisterForm() {
           control={methods.control}
           name='password'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>Password</FormLabel>
               <FormControl>
                 <Input required type='password' {...field} />
@@ -101,7 +101,7 @@ export default function RegisterForm() {
             </FormItem>
           )}
         />
-        <Button loading={isPending} type='submit'>
+        <Button className='mt-2 w-full' loading={isPending} type='submit'>
           Sign up
         </Button>
       </form>
