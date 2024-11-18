@@ -2,6 +2,8 @@
 
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
+import indexPetAction from '@/utils/typesense/index-pet-action';
+import indexUserAction from '@/utils/typesense/index-user-action';
 import { ServerError } from 'typesense/lib/Typesense/Errors';
 import { z } from 'zod';
 
@@ -27,18 +29,26 @@ const addPetAction = actionClient
       throw new ServerError(insertPetError.message);
     }
 
-    const { error: insertPetParentError } = await supabase
+    const { data: petParentData, error: insertPetParentError } = await supabase
       .from('pet_parents')
       .insert({
         pet_id: pet.id,
         user_id: userId,
       })
+      .select('users(short_id)')
       .single();
 
-    if (insertPetParentError) {
+    if (insertPetParentError || !petParentData.users?.short_id) {
       await supabase.from('pets').delete().eq('id', pet.id);
-      throw new ServerError(insertPetParentError.message);
+      throw new ServerError(
+        insertPetParentError?.message || 'Unexpected error',
+      );
     }
+
+    await Promise.allSettled([
+      indexPetAction({ petShortId: pet.short_id }),
+      indexUserAction({ userShortId: petParentData.users.short_id }),
+    ]);
 
     return pet.short_id;
   });

@@ -1,5 +1,8 @@
 import { getAdminClient } from '@/lib/supabase/get-admin-client';
-import { userDocumentSchema } from '@/lib/typesense/document-schemas';
+import {
+  petDocumentSchema,
+  userDocumentSchema,
+} from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
 import invariant from 'invariant';
 import { z } from 'zod';
@@ -31,7 +34,7 @@ async function reset() {
       { name: 'parents', type: 'object[]' },
       {
         name: 'parents.avatar_url',
-        type: 'string',
+        type: 'string[]',
         optional: true,
         index: false,
       },
@@ -88,30 +91,26 @@ async function reset() {
     tenantProfilesSearchKey,
   });
 
-  // const petInserts = await supabase
-  //   .rpc('format_pets_for_typesense')
-  //   .then(({ data }) => z.array(petDocumentSchema).parse(data));
-  //
-  // if (petInserts.length) {
-  //   await typesense
-  //     .collections('pets')
-  //     .documents()
-  //     .import(petInserts, { action: 'create', return_doc: true });
-  // }
+  const petInserts = await supabase
+    .rpc('format_pets_for_typesense')
+    .then(({ data }) => z.array(petDocumentSchema).parse(data));
 
-  const tenantProfileInserts = await supabase
+  if (petInserts.length) {
+    await typesense
+      .collections('pets')
+      .documents()
+      .import(petInserts, { action: 'create', return_doc: true });
+  }
+
+  const userInserts = await supabase
     .rpc('format_users_for_typesense')
-    .then((res) => {
-      console.dir(res, { depth: 5 });
-      return res;
-    })
     .then(({ data }) => z.array(userDocumentSchema).parse(data));
 
-  if (tenantProfileInserts.length) {
+  if (userInserts.length) {
     await typesense
       .collections('users')
       .documents()
-      .import(tenantProfileInserts, { action: 'create', return_doc: true });
+      .import(userInserts, { action: 'create', return_doc: true });
   }
 }
 

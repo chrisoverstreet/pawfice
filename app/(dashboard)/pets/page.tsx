@@ -1,4 +1,6 @@
 import DashboardPage from '@/app/(dashboard)/dashboard-page';
+import PetsList from '@/app/(dashboard)/pets/pets-list';
+import SearchInput from '@/app/(dashboard)/search-input';
 import {
   Breadcrumb,
   BreadcrumbItem,
@@ -27,8 +29,11 @@ export default async function PetsPage() {
       >
         <div className='flex flex-col gap-4'>
           <div className='flex gap-4'>
-            <div className='flex gap-4 flex-1'>{/*<SearchInput />*/}</div>
+            <div className='flex gap-4 flex-1'>
+              <SearchInput />
+            </div>
           </div>
+          <PetsList />
         </div>
       </DashboardPage>
     </>

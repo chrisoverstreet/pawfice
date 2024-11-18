@@ -3,6 +3,7 @@
 import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import type { Database } from '@/utils/supabase/types';
+import indexPetAction from '@/utils/typesense/index-pet-action';
 import indexUserAction from '@/utils/typesense/index-user-action';
 import {
   isValidPhoneNumber,
@@ -64,17 +65,29 @@ const updateProfileAction = actionClient
         updates.phone = phone;
       }
 
-      const { error } = await supabase
+      const { data: updatedUser, error } = await supabase
         .from('users')
         .update(updates)
         .eq('short_id', userShortId)
+        .select('pet_parents(pets(*))')
         .single();
 
       if (error) {
         throw new ServerError(error.message);
       }
 
-      await indexUserAction({ userShortId }).catch(console.error);
+      await Promise.allSettled([
+        indexUserAction({ userShortId }),
+        ...(updatedUser.pet_parents?.reduce<Promise<unknown>[]>((acc, pp) => {
+          if (pp.pets?.short_id) {
+            acc.push(indexPetAction({ petShortId: pp.pets.short_id }));
+          }
+
+          return acc;
+        }, []) ?? []),
+      ]);
+
+      await indexUserAction({ userShortId });
 
       revalidatePath(`/users/${userShortId}`);
     },

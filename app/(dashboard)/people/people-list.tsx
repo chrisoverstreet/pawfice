@@ -26,7 +26,7 @@ import { z } from 'zod';
 
 export default function PeopleList() {
   // TODO hard-coded
-  const searchKey = useScopedSearchKey('ROG3ajkUNo4TEW2ins0e6zEtCL3bH2oq');
+  const searchKey = useScopedSearchKey('7M6FIuvOOigAGbmebpO9M5DG5Tm93jbo');
 
   const [q] = useQ();
   const [debouncedQ] = useDebounce(q, 240);
@@ -227,14 +227,16 @@ function Hit({
                 ))}
               </div>
               <div className='truncate hidden sm:inline-block max-w-[150px]'>
-                {hit.document.pets?.map((pet) => (
-                  <Link
-                    className='inline hover:underline'
-                    key={pet.id}
-                    href={`/pets/${pet.id}`}
-                  >
-                    {pet.name}
-                  </Link>
+                {hit.document.pets?.map((pet, i) => (
+                  <span key={pet.id}>
+                    <Link
+                      className='inline hover:underline'
+                      href={`/pets/${pet.id}`}
+                    >
+                      {pet.name}
+                    </Link>
+                    {i !== (hit.document.pets?.length ?? 0) - 1 ? ', ' : null}
+                  </span>
                 ))}
               </div>
             </div>
@@ -260,10 +262,10 @@ function Hit({
               <p>
                 <strong>Role:</strong> {hit.document.role}
               </p>
-              {/*<p>*/}
-              {/*  <strong>Pets:</strong>{' '}*/}
-              {/*  {hit.document.pets.map((pet) => pet.name).join(', ')}*/}
-              {/*</p>*/}
+              <p>
+                <strong>Pets:</strong>{' '}
+                {hit.document.pets?.map((pet) => pet.name).join(', ')}
+              </p>
             </div>
           </div>
         </TableCell>

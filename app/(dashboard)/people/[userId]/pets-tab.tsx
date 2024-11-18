@@ -1,3 +1,4 @@
+import AddPetButton from '@/app/(dashboard)/people/[userId]/add-pet-button';
 import type { PageData } from '@/app/(dashboard)/people/[userId]/get-page-data';
 import { Card, CardContent } from '@/components/ui/card';
 import { PawPrint } from 'lucide-react';
@@ -20,7 +21,7 @@ export default function PetsTab(props: { pets: PageData['pets'] }) {
   );
 
   return (
-    <div className='container mx-auto'>
+    <div className='container mx-auto flex flex-col gap-4'>
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6'>
         {pets.map((pet) => (
           <Link href={`/pets/${pet.short_id}`} key={pet.id} className='group'>
@@ -58,6 +59,7 @@ export default function PetsTab(props: { pets: PageData['pets'] }) {
           </Link>
         ))}
       </div>
+      <AddPetButton />
     </div>
   );
 }

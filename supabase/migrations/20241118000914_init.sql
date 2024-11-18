@@ -279,6 +279,83 @@ AS $function$
 $function$
 ;
 
+CREATE OR REPLACE FUNCTION public.format_pet_for_typesense(pet_short_id text)
+ RETURNS json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+declare
+  result json;
+begin
+  with pet_parents_agg as (
+    select
+      pp.pet_id,
+      jsonb_agg(
+        jsonb_build_object(
+          'avatar_url', u.avatar_url,
+          'id', u.short_id,
+          'name', u.name
+        )
+      ) as parents
+    from pet_parents pp
+    join users u on u.id = pp.user_id
+    where pp.pet_id = (select id from pets where short_id = pet_short_id)
+    group by pp.pet_id
+  )
+  select
+    json_build_object(
+      'avatar_url', p.avatar_url,
+      'created_at', extract(epoch from p.created_at)::int,
+      'id', p.short_id,
+      'name', p.name,
+      'tenant_id', encode_id('tenants', p.tenant_id),
+      'parents', coalesce(pa.parents, '[]'::jsonb)
+    ) into result
+  from public.pets p
+  left join pet_parents_agg pa on pa.pet_id = p.id
+  where p.short_id = pet_short_id;
+
+  return result;
+end;
+$function$
+;
+
+CREATE OR REPLACE FUNCTION public.format_pets_for_typesense()
+ RETURNS SETOF json
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+AS $function$
+begin
+  return query
+  with pet_parents_agg as (
+    select
+      pp.pet_id,
+      jsonb_agg(
+        jsonb_build_object(
+          'avatar_url', u.avatar_url,
+          'id', u.short_id,
+          'name', u.name
+        )
+      ) as parents
+    from pet_parents pp
+    join users u on u.id = pp.user_id
+    group by pp.pet_id
+  )
+  select
+    json_build_object(
+      'avatar_url', p.avatar_url,
+      'created_at', extract(epoch from p.created_at)::int,
+      'id', p.short_id,
+      'name', p.name,
+      'tenant_id', encode_id('tenants', p.tenant_id),
+      'parents', coalesce(pa.parents, '[]'::jsonb)
+    )
+  from public.pets p
+  left join pet_parents_agg pa on pa.pet_id = p.id;
+end;
+$function$
+;
+
 CREATE OR REPLACE FUNCTION public.format_user_for_typesense(user_short_id text)
  RETURNS json
  LANGUAGE plpgsql
