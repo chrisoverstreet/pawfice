@@ -1,7 +1,7 @@
 'use client';
 
 import Navigation from '@/components/dashboard/navigation';
-import { Search, X } from 'lucide-react';
+import { Menu, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -14,7 +14,18 @@ export default function AppBar() {
         <div className='bg-surface/80 backdrop-blur-sm border border-divider rounded-xl'>
           <div className='flex h-16 items-center justify-between px-4 lg:px-6'>
             <div className='flex items-center gap-x-4 lg:gap-x-6 flex-1'>
-              <div>TODO MobileMenu</div>
+              <div className='flex md:hidden'>
+                <button
+                  className='p-2 text-gray-airbnb hover:bg-gray-50 rounded-lg'
+                  onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+                  type='button'
+                >
+                  <span className='sr-only'>
+                    {isMobileMenuOpen ? 'Close menu' : 'Open menu'}
+                  </span>
+                  <Menu className='h-5 w-5' />
+                </button>
+              </div>
               <div className='hidden md:block'>
                 <div>TODO BusinessDropdown</div>
               </div>
