@@ -3,7 +3,11 @@
 import useQ from '@/hooks/use-q';
 import { Search, X } from 'lucide-react';
 
-export default function SearchInput() {
+export default function SearchInput({
+  placeholder = 'Search…',
+}: {
+  placeholder?: string;
+}) {
   const [q, setQ] = useQ();
 
   return (
@@ -14,7 +18,7 @@ export default function SearchInput() {
         className='w-full pl-12 pr-4 py-3 text-lg bg-transparent placeholder:text-gray-400 focus:outline-none text-content'
         type='text'
         onChange={(e) => setQ(e.currentTarget.value)}
-        placeholder='Search pets or parents…'
+        placeholder={placeholder}
         value={q}
       />
       {!!q && (
