@@ -1,11 +1,17 @@
 'use client';
 
 import Navigation from '@/components/dashboard/navigation';
+import UserAvatarDropdownMenu from '@/components/dashboard/user-avatar-dropdown-menu';
+import type { Tables } from '@/utils/supabase/types';
 import { Menu, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
-export default function AppBar() {
+export default function AppBar({
+  user,
+}: {
+  user: Pick<Tables<'users'>, 'avatar_url' | 'email' | 'initials' | 'name'>;
+}) {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
@@ -43,7 +49,7 @@ export default function AppBar() {
                 <Search className='h-5 w-5 text-muted' />
               </Link>
               <div>TODO NotificationsPopover</div>
-              <div>TODO UserAvatar</div>
+              <UserAvatarDropdownMenu user={user} />
             </div>
           </div>
         </div>
@@ -87,19 +93,16 @@ export default function AppBar() {
                     Account
                   </h3>
                   <div className='flex items-center gap-3 p-2 rounded-lg hover-bg'>
-                    {/* TODO */}
                     <img
                       alt='User avatar'
                       className='h-10 w-10 rounded-full object-cover'
-                      src='https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&q=80'
+                      src={user.avatar_url ?? undefined}
                     />
                     <div>
                       <div className='text-sm font-semibold text-content'>
-                        TODO Sarah Johnson
+                        {user.name}
                       </div>
-                      <div className='text-sx text-muted'>
-                        TODO sarah@petstay.pro
-                      </div>
+                      <div className='text-sx text-muted'>{user.email}</div>
                     </div>
                   </div>
                 </div>
