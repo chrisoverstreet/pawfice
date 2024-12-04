@@ -1,5 +1,6 @@
 'use client';
 
+import Navigation from '@/components/dashboard/navigation';
 import { Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
@@ -20,7 +21,7 @@ export default function AppBar() {
             </div>
 
             <div className='hidden md:flex flex-1 justify-center'>
-              <div>Navigation</div>
+              <Navigation />
             </div>
 
             <div className='flex items-center gap-x-4 flex-1 justify-end'>
@@ -65,7 +66,7 @@ export default function AppBar() {
                   <h3 className='text-sm font-semibold text-muted mb-4'>
                     Menu
                   </h3>
-                  <div className='flex flex-col space-y-1'>TODO Navigation</div>
+                  <Navigation className='flex flex-col space-y-1' />
                 </div>
               </div>
 
