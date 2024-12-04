@@ -3,7 +3,7 @@
 import Navigation from '@/components/dashboard/navigation';
 import UserAvatarDropdownMenu from '@/components/dashboard/user-avatar-dropdown-menu';
 import type { Tables } from '@/utils/supabase/types';
-import { Menu, Search, X } from 'lucide-react';
+import { Bell, Menu, Search, X } from 'lucide-react';
 import Link from 'next/link';
 import { useState } from 'react';
 
@@ -48,7 +48,9 @@ export default function AppBar({
               >
                 <Search className='h-5 w-5 text-muted' />
               </Link>
-              <div>TODO NotificationsPopover</div>
+              <div className='p-2 rounded-full hover-bg transition-colors'>
+                <Bell className='h-5 w-5 text-muted' />
+              </div>
               <UserAvatarDropdownMenu user={user} />
             </div>
           </div>
