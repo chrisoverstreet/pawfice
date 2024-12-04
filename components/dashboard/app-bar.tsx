@@ -1,5 +1,6 @@
 'use client';
 
+import BusinessDropdownMenu from '@/components/dashboard/business-dropdown-menu';
 import Navigation from '@/components/dashboard/navigation';
 import UserAvatarDropdownMenu from '@/components/dashboard/user-avatar-dropdown-menu';
 import type { Tables } from '@/utils/supabase/types';
@@ -33,7 +34,7 @@ export default function AppBar({
                 </button>
               </div>
               <div className='hidden md:block'>
-                <div>TODO BusinessDropdown</div>
+                <BusinessDropdownMenu />
               </div>
             </div>
 
