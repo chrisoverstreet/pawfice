@@ -4,6 +4,7 @@ import { actionClient } from '@/lib/safe-action';
 import { getServerClient } from '@/lib/supabase/get-server-client';
 import { userDocumentSchema } from '@/lib/typesense/document-schemas';
 import { getTypesenseAdminClient } from '@/lib/typesense/get-typesense-admin-client';
+import { revalidatePath } from 'next/cache';
 import { z } from 'zod';
 
 const schema = z.object({
@@ -29,6 +30,10 @@ const indexUserAction = actionClient
         .documents()
         .upsert(userDocumentSchema.parse(data));
     }
+
+    revalidatePath('/search');
+    revalidatePath('/parents/search');
+    revalidatePath('/pets/search');
   });
 
 export default indexUserAction;

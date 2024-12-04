@@ -1,5 +1,6 @@
 'use client';
 
+import addParentAction from '@/app/(full-screen)/parents/new/add-parent-action';
 import FormSection from '@/components/parents/new/form-section';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -20,16 +21,29 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { AsYouType, isValidPhoneNumber } from 'libphonenumber-js';
 import { Bell, Mail, MessageSquare } from 'lucide-react';
+import { useAction } from 'next-safe-action/hooks';
+import { useRouter } from 'next/navigation';
+import type { FormEvent } from 'react';
 import { useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 import { z } from 'zod';
 
-// TODO
 const schema = z.object({
   firstName: z.string().min(1),
-  lastName: z.string(),
-  email: z.string().email().or(z.literal('')),
-  phone: z.string(),
+  lastName: z.string().transform((ln) => ln || undefined),
+  email: z
+    .string()
+    .email()
+    .or(z.literal(''))
+    .transform((e) => e || undefined),
+  phone: z
+    .string()
+    .refine((val) => val === '' || isValidPhoneNumber(val, 'US'), {
+      message: 'Invalid phone number',
+    })
+    .transform((x) => x || undefined),
   streetAddress: z.string(),
   city: z.string(),
   state: z.string(),
@@ -56,6 +70,19 @@ const schema = z.object({
 type FormValues = z.infer<typeof schema>;
 
 export default function NewParentForm() {
+  const router = useRouter();
+
+  const { execute, hasSucceeded, isPending } = useAction(addParentAction, {
+    onSuccess: async ({ data: parentId }) => {
+      if (parentId) {
+        toast.success('Successfully added new parent');
+        router.push(`/parents/${parentId}`);
+      }
+    },
+    onError: ({ error }) =>
+      toast.error(error.serverError || 'Unexpected error'),
+  });
+
   const methods = useForm<FormValues>({
     defaultValues: {
       firstName: '',
@@ -68,7 +95,7 @@ export default function NewParentForm() {
       zip: '',
       country: '',
       emergencyContact: '',
-      emergencyRelationship: undefined,
+      emergencyRelationship: 'Other',
       emergencyPhone: '',
       contactViaEmail: true,
       contactViaSms: true,
@@ -78,12 +105,13 @@ export default function NewParentForm() {
       promotions: false,
       newsletters: false,
     },
+    disabled: hasSucceeded || isPending,
     resolver: zodResolver(schema),
   });
 
   return (
     <Form {...methods}>
-      <form className='space-y-6'>
+      <form className='space-y-6' onSubmit={methods.handleSubmit(onSubmit)}>
         <FormSection
           className='grid grid-cols-1 sm:grid-cols-2 gap-4'
           heading='Contact Information'
@@ -120,8 +148,14 @@ export default function NewParentForm() {
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Phone</FormLabel>
-                <FormControl>
-                  {/* TODO */}
+                <FormControl
+                  onChange={(e: FormEvent<HTMLInputElement>) => {
+                    methods.setValue(
+                      'phone',
+                      new AsYouType('US').input(e.currentTarget.value),
+                    );
+                  }}
+                >
                   <Input
                     placeholder='(540) 123-4567'
                     type='tel'
@@ -419,6 +453,8 @@ export default function NewParentForm() {
         <div className='flex justify-end'>
           <Button
             className='w-full sm:w-auto'
+            disabled={isPending || hasSucceeded}
+            loading={isPending}
             type='submit'
             size='lg'
             variant='default'
@@ -429,4 +465,13 @@ export default function NewParentForm() {
       </form>
     </Form>
   );
+
+  function onSubmit(fv: FormValues) {
+    return execute({
+      email: fv.email,
+      firstName: fv.firstName,
+      lastName: fv.lastName,
+      phone: fv.phone,
+    });
+  }
 }

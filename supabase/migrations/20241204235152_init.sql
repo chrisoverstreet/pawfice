@@ -16,7 +16,8 @@ create table "public"."pet_parents" (
     "tenant_id" bigint default tenant_id(),
     "pet_id" bigint,
     "user_id" bigint,
-    "created_at" timestamp with time zone not null default now()
+    "created_at" timestamp with time zone not null default now(),
+    "email" text
 );
 
 
@@ -123,6 +124,53 @@ alter table "public"."users" validate constraint "users_tenant_id_fkey";
 
 set check_function_bodies = off;
 
+CREATE OR REPLACE FUNCTION public.add_parent(p_first_name text, p_last_name text DEFAULT NULL::text, p_email text DEFAULT NULL::text, p_phone text DEFAULT NULL::text)
+ RETURNS text
+ LANGUAGE plpgsql
+ SECURITY DEFINER
+ SET search_path TO 'public'
+AS $function$DECLARE
+    v_tenant_id             bigint;
+    v_tenant_role           TEXT;
+    v_existing_auth_user_id UUID;
+    v_user_short_id         text;
+BEGIN
+    v_tenant_id := public.tenant_id();
+    v_tenant_role := public.tenant_role();
+
+    IF v_tenant_id is null or v_tenant_role NOT IN ('owner', 'admin') THEN
+        RAISE EXCEPTION 'Insufficient permissions';
+    END IF;
+
+    -- If phone is provided, check if auth user exists
+    IF p_phone IS NOT NULL THEN
+        SELECT id
+        INTO v_existing_auth_user_id
+        FROM auth.users
+        WHERE auth.users.phone = p_phone;
+    END IF;
+
+    -- Create tenant user profile
+    INSERT INTO public.users (auth_id,
+                              tenant_id,
+                              first_name,
+                              last_name,
+                              phone,
+                              email,
+                              role)
+    VALUES (v_existing_auth_user_id,
+            v_tenant_id,
+            p_first_name,
+            p_last_name,
+            p_phone,
+            p_email,
+            'parent')
+    RETURNING short_id INTO v_user_short_id;
+
+    RETURN v_user_short_id;
+END;$function$
+;
+
 CREATE OR REPLACE FUNCTION public.create_tenant(p_name text)
  RETURNS text
  LANGUAGE plpgsql
@@ -158,53 +206,6 @@ begin
 
     return v_tenant_id;
 end;
-$function$
-;
-
-CREATE OR REPLACE FUNCTION public.create_user(p_first_name text, p_last_name text DEFAULT NULL::text, p_email text DEFAULT NULL::text, p_phone text DEFAULT NULL::text)
- RETURNS text
- LANGUAGE plpgsql
- SECURITY DEFINER
- SET search_path TO 'public'
-AS $function$
-DECLARE
-    v_tenant_id             bigint;
-    v_tenant_role           TEXT;
-    v_existing_auth_user_id UUID;
-    v_user_short_id         text;
-BEGIN
-    v_tenant_id := public.tenant_id();
-    v_tenant_role := public.tenant_role();
-
-    IF v_tenant_id is null or v_tenant_role NOT IN ('owner', 'admin') THEN
-        RAISE EXCEPTION 'Insufficient permissions';
-    END IF;
-
-    -- If email is provided, check if auth user exists
-    IF p_email IS NOT NULL THEN
-        SELECT id
-        INTO v_existing_auth_user_id
-        FROM auth.users
-        WHERE auth.users.email = p_email;
-    END IF;
-
-    -- Create tenant user profile
-    INSERT INTO public.users (auth_id,
-                              tenant_id,
-                              first_name,
-                              last_name,
-                              phone,
-                              role)
-    VALUES (v_existing_auth_user_id,
-            v_tenant_id,
-            p_first_name,
-            p_last_name,
-            p_phone,
-            'parent')
-    RETURNING short_id INTO v_user_short_id;
-
-    RETURN v_user_short_id;
-END;
 $function$
 ;
 
