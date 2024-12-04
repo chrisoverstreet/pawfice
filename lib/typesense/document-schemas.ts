@@ -16,6 +16,8 @@ export const petDocumentSchema = z.object({
   ),
 });
 
+export type PetDocument = z.infer<typeof petDocumentSchema>;
+
 export const userDocumentSchema = z.object({
   avatar_url: z.string().nullish(),
   created_at: z.number().int(),
@@ -41,3 +43,5 @@ export const userDocumentSchema = z.object({
     )
     .nullish(),
 });
+
+export type UserDocument = z.infer<typeof userDocumentSchema>;
