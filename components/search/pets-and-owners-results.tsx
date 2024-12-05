@@ -1,6 +1,7 @@
 'use client';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import useQ from '@/hooks/use-q';
 import type {
   PetDocument,
@@ -69,14 +70,6 @@ export default function PetsAndOwnersResults() {
             <h2 className='text-lg font-semibold text-secondary'>
               Pets ({data.pets.found})
             </h2>
-            {data?.pets.found > MAX_RESULTS && (
-              <Link
-                className='text-primary font-medium text-sm hover:underline'
-                href={`/pets/search?q=${encodeURIComponent(q)}`}
-              >
-                View all pets
-              </Link>
-            )}
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
             {data?.pets.hits.slice(0, MAX_RESULTS).map(({ document: pet }) => (
@@ -112,6 +105,16 @@ export default function PetsAndOwnersResults() {
               </div>
             ))}
           </div>
+          {data?.pets.found > MAX_RESULTS && (
+            <div className='mt-4 mx-auto text-center'>
+              <Link
+                className='font-medium text-sm hover:underline'
+                href={`/pets/search?q=${encodeURIComponent(q)}`}
+              >
+                View all pets
+              </Link>
+            </div>
+          )}
         </section>
       )}
 
@@ -122,12 +125,9 @@ export default function PetsAndOwnersResults() {
               Parents ({data.parents.found})
             </h2>
             {data.parents.found > MAX_RESULTS && (
-              <Link
-                className='text-primary font-medium text-sm hover:underline'
-                href={`/parents/search?q=${encodeURIComponent(q)}`}
-              >
-                View all parents
-              </Link>
+              <Button asChild>
+                <Link href='/parents/new'>Add parent</Link>
+              </Button>
             )}
           </div>
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
@@ -161,6 +161,16 @@ export default function PetsAndOwnersResults() {
                 </div>
               ))}
           </div>
+          {data?.pets.found > MAX_RESULTS && (
+            <div className='mt-4 mx-auto text-center'>
+              <Link
+                className='font-medium text-sm hover:underline'
+                href={`/parents/search?q=${encodeURIComponent(q)}`}
+              >
+                View all parents
+              </Link>
+            </div>
+          )}
         </section>
       )}
     </div>
