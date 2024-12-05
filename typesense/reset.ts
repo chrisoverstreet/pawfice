@@ -31,7 +31,6 @@ async function reset() {
       { name: 'created_at', type: 'int32', index: false },
       { name: 'name', type: 'string' },
       { name: 'tenant_id', type: 'string' },
-      { name: 'parents', type: 'object[]' },
       {
         name: 'parents.avatar_url',
         type: 'string[]',
@@ -59,7 +58,6 @@ async function reset() {
       { name: 'role', type: 'string', facet: true },
       { name: 'tenant_id', type: 'string' },
       { name: 'user_id', type: 'string', optional: true },
-      { name: 'pets', type: 'object[]', optional: true },
       { name: 'pets.avatar_url', type: 'string', optional: true, index: false },
       { name: 'pets.id', type: 'string[]', optional: true },
       { name: 'pets.name', type: 'string[]', optional: true },

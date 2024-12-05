@@ -1,6 +1,6 @@
 'use client';
 
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import useQ from '@/hooks/use-q';
 import type {
   PetDocument,
@@ -89,7 +89,10 @@ export default function PetsAndOwnersResults() {
                     <Avatar className='h-16 w-16'>
                       {/* TODO initials */}
                       <AvatarFallback>{pet.name}</AvatarFallback>
-                      {/*<AvatarImage alt={pet.name} src={pet.avatar_url} />*/}
+                      <AvatarImage
+                        alt={pet.name}
+                        src={pet.avatar_url ?? undefined}
+                      />
                     </Avatar>
                   </PetLink>
                   <div className='flex-1'>

@@ -11,6 +11,16 @@ create sequence "public"."tenants_id_seq";
 
 create sequence "public"."users_id_seq";
 
+CREATE OR REPLACE FUNCTION public.tenant_id()
+    RETURNS bigint
+    LANGUAGE plpgsql
+AS $function$
+BEGIN
+    return (auth.jwt() ->> 'tenant_id')::bigint;
+END;
+$function$
+;
+
 create table "public"."pet_parents" (
     "id" integer not null default nextval('pet_parents_id_seq'::regclass),
     "tenant_id" bigint default tenant_id(),
@@ -20,6 +30,16 @@ create table "public"."pet_parents" (
     "email" text
 );
 
+CREATE OR REPLACE FUNCTION public.encode_id(p_table_name text, p_id bigint)
+    RETURNS text
+    LANGUAGE plpgsql
+    IMMUTABLE
+AS $function$
+begin
+    return extensions.id_encode(p_id, p_table_name, 6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+end;
+$function$
+;
 
 create table "public"."pets" (
     "id" integer not null default nextval('pets_id_seq'::regclass),
@@ -269,16 +289,7 @@ AS $function$
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.encode_id(p_table_name text, p_id bigint)
- RETURNS text
- LANGUAGE plpgsql
- IMMUTABLE
-AS $function$
-    begin
-        return extensions.id_encode(p_id, p_table_name, 6, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
-    end;
-$function$
-;
+
 
 CREATE OR REPLACE FUNCTION public.format_pet_for_typesense(pet_short_id text)
  RETURNS json
@@ -517,16 +528,6 @@ END;
 $function$
 ;
 
-CREATE OR REPLACE FUNCTION public.tenant_id()
- RETURNS bigint
- LANGUAGE plpgsql
-AS $function$
-BEGIN
-    return (auth.jwt() ->> 'tenant_id')::bigint;
-END;
-$function$
-;
-
 CREATE OR REPLACE FUNCTION public.tenant_role()
  RETURNS tenant_role
  LANGUAGE plpgsql
@@ -719,20 +720,6 @@ grant truncate on table "public"."pets" to "service_role";
 
 grant update on table "public"."pets" to "service_role";
 
-grant delete on table "public"."tenants" to "PUBLIC";
-
-grant insert on table "public"."tenants" to "PUBLIC";
-
-grant references on table "public"."tenants" to "PUBLIC";
-
-grant select on table "public"."tenants" to "PUBLIC";
-
-grant trigger on table "public"."tenants" to "PUBLIC";
-
-grant truncate on table "public"."tenants" to "PUBLIC";
-
-grant update on table "public"."tenants" to "PUBLIC";
-
 grant delete on table "public"."tenants" to "anon";
 
 grant insert on table "public"."tenants" to "anon";
@@ -788,20 +775,6 @@ grant trigger on table "public"."tenants" to "supabase_auth_admin";
 grant truncate on table "public"."tenants" to "supabase_auth_admin";
 
 grant update on table "public"."tenants" to "supabase_auth_admin";
-
-grant delete on table "public"."users" to "PUBLIC";
-
-grant insert on table "public"."users" to "PUBLIC";
-
-grant references on table "public"."users" to "PUBLIC";
-
-grant select on table "public"."users" to "PUBLIC";
-
-grant trigger on table "public"."users" to "PUBLIC";
-
-grant truncate on table "public"."users" to "PUBLIC";
-
-grant update on table "public"."users" to "PUBLIC";
 
 grant delete on table "public"."users" to "anon";
 
