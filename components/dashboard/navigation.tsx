@@ -1,5 +1,6 @@
 'use client';
 
+import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -46,22 +47,21 @@ export default function Navigation({
   return (
     <nav className={className}>
       {navigationItems.map((item, i) => (
-        <Link
-          className={clsx(
-            'hidden items-center gap-2 px-3 py-2 text-sm font-medium rounded-lg transition-colors whitespace-nowrap',
-            pathname === item.href
-              ? 'text-primary bg-primary/5'
-              : 'text-muted hover:text-primary hover-bg',
-            i === 0 && 'md:flex',
-            i === 1 && 'lg:flex',
-            i === 2 && 'xl:flex',
-          )}
-          href={item.href}
-          key={item.name}
-        >
-          <item.icon className='h-5 w-5' />
-          {item.name}
-        </Link>
+        <Button asChild key={item.name} variant='ghost'>
+          <Link
+            className={clsx(
+              'hidden items-center gap-2 whitespace-nowrap',
+              pathname === item.href ? 'text-primary' : 'text-muted',
+              i === 0 && 'md:flex',
+              i === 1 && 'lg:flex',
+              i === 2 && 'xl:flex',
+            )}
+            href={item.href}
+          >
+            <item.icon className='h-5 w-5' />
+            {item.name}
+          </Link>
+        </Button>
       ))}
       <DropdownMenu open={moreDropdownOpen} onOpenChange={setMoreDropdownOpen}>
         <DropdownMenuTrigger>
@@ -76,15 +76,15 @@ export default function Navigation({
             />
           </div>
         </DropdownMenuTrigger>
-        <DropdownMenuContent className='w-56 bg-surface rounded-lg'>
+        <DropdownMenuContent className='w-56 rounded-lg'>
           {navigationItems.map((item, i) => (
             <DropdownMenuItem asChild key={item.name}>
               <Link
                 className={clsx(
                   'cursor-pointer flex items-center gap-2 px-4 py-2 text-sm transition-colors',
                   pathname === item.href
-                    ? 'text-primary bg-primary/5'
-                    : 'text-muted hover:text-primary hover-bg',
+                    ? 'btn-primary'
+                    : 'text-muted hover:text-black hover-bg',
                   i === 0 && 'hidden',
                   i === 1 && 'lg:hidden',
                   i === 2 && 'xl:hidden',

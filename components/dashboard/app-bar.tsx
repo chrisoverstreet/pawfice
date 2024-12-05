@@ -18,7 +18,7 @@ export default function AppBar({
   return (
     <>
       <div className='fixed top-4 left-1/2 -translate-x-1/2 z-40 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8'>
-        <div className='bg-surface/80 backdrop-blur-sm border border-divider rounded-xl'>
+        <div className='bg-white/70 backdrop-blur-md border border-divider rounded-xl drop-shadow-sm'>
           <div className='flex h-16 items-center justify-between px-4 lg:px-6'>
             <div className='flex items-center gap-x-4 lg:gap-x-6 flex-1'>
               <div className='flex md:hidden'>

@@ -20,7 +20,7 @@ export default function StatsCard({
     <div className='card p-6'>
       <div className='flex items-center justify-between mb-4'>
         <span className='text-gray-airbnb text-sm'>{title}</span>
-        <Icon className='h-5 w-5 text-primary' />
+        <Icon className='h-5 w-5 text-muted' />
       </div>
       <div className='space-y-1'>
         <div className='text-2xl font-semibold text-secondary'>{value}</div>

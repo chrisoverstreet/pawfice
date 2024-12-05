@@ -17,8 +17,8 @@ export default function BusinessDropdown() {
       <DropdownMenu open={open} onOpenChange={onOpenChange}>
         <DropdownMenuTrigger className='flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-highlight transition-colors w-full md:w-auto'>
           <div className='w-full flex items-center gap-2'>
-            <div className='h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center'>
-              <PawPrint className='h-5 w-5 text-primary' />
+            <div className='h-8 w-8 rounded-full flex items-center justify-center'>
+              <PawPrint className='h-5 w-5' />
             </div>
             <div className='text-left'>
               <div className='text-sm font-semibold text-content'>
