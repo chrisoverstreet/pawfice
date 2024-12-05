@@ -1,5 +1,6 @@
 import SearchInput from '@/components/search-input';
 import type { Metadata } from 'next';
+import { Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Check In',
@@ -14,7 +15,9 @@ export default async function CheckInPage() {
       </div>
 
       <div className='mb-6'>
-        <SearchInput />
+        <Suspense fallback={<>Loading…</>}>
+          <SearchInput />
+        </Suspense>
       </div>
 
       <div>TODO List</div>
