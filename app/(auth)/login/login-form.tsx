@@ -47,17 +47,23 @@ export default function LoginForm() {
   return (
     <Form {...methods}>
       <form
-        className='flex flex-col gap-4'
+        className='grid gap-4'
         onSubmit={methods.handleSubmit((fv) => execute(fv))}
       >
         <FormField
           control={methods.control}
           name='email'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>Email</FormLabel>
               <FormControl>
-                <Input autoFocus inputMode='email' required {...field} />
+                <Input
+                  autoFocus
+                  inputMode='email'
+                  placeholder='Enter your email'
+                  required
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -67,16 +73,21 @@ export default function LoginForm() {
           control={methods.control}
           name='password'
           render={({ field }) => (
-            <FormItem>
+            <FormItem className='grid w-full max-w-sm items-center gap-1.5'>
               <FormLabel>Password</FormLabel>
               <FormControl>
-                <Input required type='password' {...field} />
+                <Input
+                  required
+                  type='password'
+                  placeholder='Enter your password'
+                  {...field}
+                />
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button loading={isPending} type='submit'>
+        <Button className='mt-2 w-full' loading={isPending} type='submit'>
           Sign In
         </Button>
       </form>
