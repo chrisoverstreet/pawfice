@@ -51,11 +51,11 @@ const schema = z.object({
   country: z.string(),
   emergencyContact: z.string(),
   emergencyRelationship: z.enum([
-    'Spouse',
-    'Parent',
-    'Sibling',
-    'Friend',
-    'Other',
+    'spouse',
+    'parent',
+    'sibling',
+    'friend',
+    'other',
   ]),
   emergencyPhone: z.string(),
   contactViaEmail: z.boolean(),
@@ -95,7 +95,7 @@ export default function NewParentForm() {
       zip: '',
       country: '',
       emergencyContact: '',
-      emergencyRelationship: 'Other',
+      emergencyRelationship: 'other',
       emergencyPhone: '',
       contactViaEmail: true,
       contactViaSms: true,
@@ -286,11 +286,11 @@ export default function NewParentForm() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent className='bg-surface'>
-                    <SelectItem value='Spouse'>Spouse</SelectItem>
-                    <SelectItem value='Parent'>Parent</SelectItem>
-                    <SelectItem value='Sibling'>Sibling</SelectItem>
-                    <SelectItem value='Friend'>Friend</SelectItem>
-                    <SelectItem value='Other'>Other</SelectItem>
+                    <SelectItem value='spouse'>Spouse</SelectItem>
+                    <SelectItem value='parent'>Parent</SelectItem>
+                    <SelectItem value='sibling'>Sibling</SelectItem>
+                    <SelectItem value='friend'>Friend</SelectItem>
+                    <SelectItem value='other'>Other</SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -466,12 +466,24 @@ export default function NewParentForm() {
     </Form>
   );
 
+  // TODO this needs to be cleaned up
   function onSubmit(fv: FormValues) {
     return execute({
       email: fv.email,
       firstName: fv.firstName,
       lastName: fv.lastName,
       phone: fv.phone,
+
+      emergencyContactName: fv.emergencyContact,
+      emergencyContactPhone: fv.emergencyPhone,
+      emergencyContactRelationship: fv.emergencyRelationship,
+
+      addressType: 'home',
+      streetLine1: fv.streetAddress,
+      city: fv.city,
+      state: fv.state,
+      postalCode: fv.zip,
+      country: fv.country,
     });
   }
 }
