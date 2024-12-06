@@ -10,19 +10,19 @@ export default async function DashboardPage() {
 
       <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6'>
         <StatsCard
-          title='Total Bookings'
-          value={mockStats.activeBookings}
+          title='Total Reservations'
+          value={mockStats.activeReservations}
           icon={Calendar}
           trend={{ value: 12, label: 'vs last month' }}
         />
         <StatsCard
-          title='Active Bookings'
-          value={mockStats.activeBookings}
+          title='Active Reservations'
+          value={mockStats.activeReservations}
           icon={Clipboard}
         />
         <StatsCard
-          title='Upcoming Bookings'
-          value={mockStats.upcomingBookings}
+          title='Upcoming Reservations'
+          value={mockStats.upcomingReservations}
           icon={Users}
         />
         <StatsCard
@@ -37,7 +37,7 @@ export default async function DashboardPage() {
 
       <div className='grid grid-cols-1 lg:grid-cols-3 gap-6'>
         <div className='lg:col-span-2'>
-          <div>TODO BookingsList</div>
+          <div>TODO ReservationsList</div>
         </div>
         <div>
           <div>TODO TasksCard</div>

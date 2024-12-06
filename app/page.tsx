@@ -100,11 +100,11 @@ export default async function Home() {
                     src='/placeholder.svg?height=128&width=128'
                     width={128}
                     height={128}
-                    alt='Booking Management icon'
+                    alt='Reservation Management icon'
                     className='object-cover'
                   />
                 </div>
-                <h3 className='text-xl font-bold'>Booking Management</h3>
+                <h3 className='text-xl font-bold'>Reservation Management</h3>
                 <p className='text-gray-500 dark:text-gray-400'>
                   Efficiently manage pet boarding reservations, schedules, and
                   occupancy rates.

@@ -160,8 +160,8 @@ export const mockKennels = [
   { id: 'waitlist', name: 'Waitlist', type: 'waitlist', location: 'Waitlist' },
 ] as const;
 
-export const mockBookings = [
-  // Active bookings checking out today
+export const mockReservations = [
+  // Active reservations checking out today
   {
     id: '1',
     pet: mockPets[0], // Max
@@ -211,7 +211,7 @@ export const mockBookings = [
     ],
   },
 
-  // Active bookings checking out tomorrow
+  // Active reservations checking out tomorrow
   {
     id: '3',
     pet: mockPets[6], // Milo
@@ -255,7 +255,7 @@ export const mockBookings = [
     kennelId: 'c3',
   },
 
-  // Future bookings
+  // Future reservations
   {
     id: '7',
     pet: mockPets[7], // Milo
@@ -281,8 +281,8 @@ export const mockBookings = [
 ] as const;
 
 export const mockStats = {
-  totalBookings: 45,
-  activeBookings: 12,
-  upcomingBookings: 8,
+  totalReservations: 45,
+  activeReservations: 12,
+  upcomingReservations: 8,
   monthlyRevenue: 3200,
 } as const;

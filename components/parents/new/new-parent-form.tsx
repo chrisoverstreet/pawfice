@@ -61,7 +61,7 @@ const schema = z.object({
   contactViaEmail: z.boolean(),
   contactViaSms: z.boolean(),
   contactViaPush: z.boolean(),
-  bookingReminders: z.boolean(),
+  reservationReminders: z.boolean(),
   checkInUpdates: z.boolean(),
   promotions: z.boolean(),
   newsletters: z.boolean(),
@@ -100,7 +100,7 @@ export default function NewParentForm() {
       contactViaEmail: true,
       contactViaSms: true,
       contactViaPush: true,
-      bookingReminders: true,
+      reservationReminders: true,
       checkInUpdates: true,
       promotions: false,
       newsletters: false,
@@ -386,7 +386,7 @@ export default function NewParentForm() {
             <div className='space-y-3'>
               <FormField
                 control={methods.control}
-                name='bookingReminders'
+                name='reservationReminders'
                 render={({ field }) => (
                   <FormItem className='flex items-center gap-2'>
                     <FormControl>
@@ -395,7 +395,7 @@ export default function NewParentForm() {
                         onCheckedChange={field.onChange}
                       />
                     </FormControl>
-                    <FormLabel>Booking reminders</FormLabel>
+                    <FormLabel>Reservation reminders</FormLabel>
                   </FormItem>
                 )}
               />

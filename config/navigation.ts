@@ -10,7 +10,7 @@ import {
 
 export const navigationItems = [
   { name: 'Dashboard', icon: Home, href: '/dashboard' },
-  { name: 'Bookings', icon: Calendar, href: '/bookings' },
+  { name: 'Reservations', icon: Calendar, href: '/reservations' },
   { name: 'Pets & Owners', icon: Users, href: '/search' },
   { name: 'Messages', icon: MessageSquare, href: '/messages' },
   { name: 'Tasks', icon: CheckSquare, href: '/tasks' },

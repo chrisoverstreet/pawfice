@@ -11,7 +11,7 @@ export default async function CheckInPage() {
     <div>
       <div className='mb-8'>
         <h1 className='text-2xl font-semibold text-content mb-2'>Check In</h1>
-        <p className='text-muted'>Process arrivals for upcoming bookings</p>
+        <p className='text-muted'>Process arrivals for upcoming reservations</p>
       </div>
 
       <div className='mb-6'>

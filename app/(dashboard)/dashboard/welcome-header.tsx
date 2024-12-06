@@ -15,9 +15,9 @@ export default function WelcomeHeader() {
           asChild
           size='lg'
         >
-          <Link href='/bookings/new'>
+          <Link href='/reservations/new'>
             <Plus className='h-5 w-5' />
-            New Booking
+            New Reservation
           </Link>
         </Button>
       </div>
@@ -82,11 +82,11 @@ export default function WelcomeHeader() {
             </Button>
 
             <Button asChild variant='outline'>
-              <Link href='/bookings/new' className='py-3 h-auto'>
+              <Link href='/reservations/new' className='py-3 h-auto'>
                 <Calendar className='h-8 w-8 mr-2' />
                 <div className='flex-1'>
                   <div className='text-sm font-medium text-secondary'>
-                    New Booking
+                    New Reservation
                   </div>
                   <div className='text-xs text-gray-airbnb'>
                     Schedule a stay
