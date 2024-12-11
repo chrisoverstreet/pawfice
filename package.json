@@ -10,8 +10,8 @@
     "lint": "next lint",
     "db:start": "pnpm dlx supabase@latest --network-id pawfice-net start",
     "db:generate": "mkdirp utils/supabase && pnpm dlx supabase@latest --network-id pawfice-net gen types typescript --local --schema public > utils/supabase/types.ts",
-    "db:dump": "pnpm dlx supabase@latest db dump --local --data-only --file=supabase/seed.sql",
-    "db:reset": "pnpm dlx supabase@latest --network-id pawfice-net db reset",
+    "db:reset": "tsx --env-file .env.local supabase/seed.ts > supabase/seed.sql && pnpm dlx supabase@latest --network-id pawfice-net db reset",
+    "db:sync-snaplet": "pnpm dlx @snaplet/seed sync",
     "typesense:start": "cd typesense && docker-compose --env-file ../.env.local up -d",
     "typesense:reset": "tsx --env-file .env.local typesense/reset.ts"
   },
@@ -65,10 +65,13 @@
     "zod-form-data": "^2.0.2"
   },
   "devDependencies": {
+    "@snaplet/copycat": "^5.1.0",
+    "@snaplet/seed": "0.98.0",
     "@tanstack/eslint-plugin-query": "^5.60.1",
     "@types/invariant": "^2.2.37",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20",
+    "@types/pg": "^8.11.10",
     "@types/pluralize": "^0.0.33",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -78,6 +81,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.1",
     "mkdirp": "^3.0.1",
+    "pg": "^8.13.1",
     "postcss": "^8",
     "prettier": "^3.3.3",
     "prettier-plugin-organize-imports": "^4.1.0",

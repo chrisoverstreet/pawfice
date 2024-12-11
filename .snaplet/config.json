@@ -1,0 +1,4 @@
+{
+  "adapter": "pg",
+  "projectDescription": "This is a multi-tenant B2B2C application that allows pet care businesses to manage their business and day-to-day operations. It also allows their clients to manage their reservations."
+}
