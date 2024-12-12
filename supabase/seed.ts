@@ -12,6 +12,7 @@ const main = async () => {
   // Truncate all tables in the database
   await seed.$resetDatabase();
 
+  // Required for custom_auth_hook to work
   console.log('grant all on schema extensions to supabase_auth_admin;');
 
   const {
@@ -23,7 +24,7 @@ const main = async () => {
       role: 'authenticated',
       email: 'christopheroverstreet@gmail.com',
       encrypted_password:
-        '$2a$10$A1kbqq3bGUWwh.WiriUMKOQmSoWyKIopsAkMQX3HaA7PBvEC33eG6',
+        '$2a$10$A1kbqq3bGUWwh.WiriUMKOQmSoWyKIopsAkMQX3HaA7PBvEC33eG6', // "password"
       email_confirmed_at: new Date(),
       invited_at: null,
       confirmation_token: '',
@@ -76,8 +77,8 @@ const main = async () => {
   seed.public_tenants((x) => x(10));
 
   await seed.public_users((x) =>
-    x(1, {
-      avatar_url: `https://api.dicebear.com/9.x/thumbs/svg?seed=${x}`,
+    x(1, ({ index }) => ({
+      avatar_url: () => `https://api.dicebear.com/9.x/thumbs/svg?seed=${index}`,
       tenant_id: demoTenant.id,
       auth_id: authUser.id,
       first_name: 'Chris',
@@ -85,8 +86,34 @@ const main = async () => {
       email: 'christopheroverstreet@gmail.com',
       phone: '+15409318153',
       role: 'owner',
-    }),
+    })),
   );
+
+  const { public_users } = await seed.public_users((x) =>
+    x(100, ({ index }) => ({
+      tenant_id: demoTenant.id,
+      avatar_url: () =>
+        Math.random() > 0.7
+          ? `https://api.dicebear.com/9.x/thumbs/svg?seed=${index}`
+          : null,
+      role: 'parent',
+      auth_id: null,
+    })),
+  );
+
+  const { pets } = await seed.pets((x) =>
+    x(100, ({ index }) => ({
+      tenant_id: demoTenant.id,
+      avatar_url: () =>
+        Math.random() > 0.5
+          ? `https://api.dicebear.com/9.x/thumbs/svg?seed=${index}`
+          : null,
+    })),
+  );
+
+  await seed.pet_parents((x) => x(100, { tenant_id: demoTenant.id }), {
+    connect: { pets, public_users },
+  });
 
   process.exit();
 };

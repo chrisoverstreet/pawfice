@@ -40,7 +40,7 @@ create sequence "public"."addresses_id_seq";
 create sequence "public"."emergency_contact_id_seq";
 
 create table "public"."addons" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "service_id" bigint not null,
     "name" text not null,
@@ -53,7 +53,7 @@ create table "public"."addons" (
 
 
 create table "public"."addresses" (
-    "id" integer not null default nextval('addresses_id_seq'::regclass),
+    "id" serial primary key,
     "tenant_id" bigint default tenant_id(),
     "user_id" bigint,
     "street_line1" text not null,
@@ -75,7 +75,7 @@ create table "public"."addresses" (
 
 
 create table "public"."breed_categories" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "name" text not null,
     "description" text,
@@ -87,7 +87,7 @@ create table "public"."breed_categories" (
 
 
 create table "public"."breed_category_breeds" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "breed_category_id" bigint not null,
     "breed_name" text not null,
@@ -97,7 +97,7 @@ create table "public"."breed_category_breeds" (
 
 
 create table "public"."customer_packages" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "package_id" bigint not null,
     "user_id" bigint not null,
@@ -110,7 +110,7 @@ create table "public"."customer_packages" (
 
 
 create table "public"."duration_discounts" (
-    "id" bigint generated always as identity not null,
+    "id"serial primary key,
     "tenant_id" bigint not null,
     "pricing_rule_id" bigint not null,
     "min_nights" integer not null,
@@ -123,7 +123,7 @@ create table "public"."duration_discounts" (
 
 
 create table "public"."emergency_contacts" (
-    "id" integer not null default nextval('emergency_contact_id_seq'::regclass),
+    "id" serial primary key,
     "tenant_id" bigint default tenant_id(),
     "user_id" bigint,
     "name" text not null,
@@ -135,7 +135,7 @@ create table "public"."emergency_contacts" (
 
 
 create table "public"."packages" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "service_id" bigint not null,
     "name" text not null,
@@ -150,7 +150,7 @@ create table "public"."packages" (
 
 
 create table "public"."price_adjustments" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "pricing_rule_id" bigint not null,
     "size_category_id" bigint,
@@ -163,7 +163,7 @@ create table "public"."price_adjustments" (
 
 
 create table "public"."pricing_rules" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "service_id" bigint not null,
     "service_tier_id" bigint,
@@ -177,7 +177,7 @@ create table "public"."pricing_rules" (
 
 
 create table "public"."recurrence_patterns" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "reservation_id" bigint not null,
     "type" recurrence_type not null,
@@ -189,7 +189,7 @@ create table "public"."recurrence_patterns" (
 
 
 create table "public"."reservation_addons" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "reservation_id" bigint not null,
     "addon_id" bigint not null,
@@ -201,7 +201,7 @@ create table "public"."reservation_addons" (
 
 
 create table "public"."reservation_groups" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "owner_id" bigint not null,
     "created_at" timestamp with time zone not null default now(),
@@ -210,7 +210,7 @@ create table "public"."reservation_groups" (
 
 
 create table "public"."reservations" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "pet_id" bigint not null,
     "status" reservation_status not null default 'pending'::reservation_status,
@@ -223,7 +223,7 @@ create table "public"."reservations" (
 
 
 create table "public"."service_tiers" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "name" text not null,
     "description" text,
@@ -235,7 +235,7 @@ create table "public"."service_tiers" (
 
 
 create table "public"."services" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "name" text not null,
     "type" service_type not null,
@@ -245,7 +245,7 @@ create table "public"."services" (
 
 
 create table "public"."size_categories" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "name" text not null,
     "description" text,
@@ -259,7 +259,7 @@ create table "public"."size_categories" (
 
 
 create table "public"."time_based_pricing" (
-    "id" bigint generated always as identity not null,
+    "id" serial primary key,
     "tenant_id" bigint not null,
     "pricing_rule_id" bigint not null,
     "name" text not null,
@@ -280,10 +280,6 @@ alter sequence "public"."addresses_id_seq" owned by "public"."addresses"."id";
 
 alter sequence "public"."emergency_contact_id_seq" owned by "public"."emergency_contacts"."id";
 
-CREATE UNIQUE INDEX addons_pkey ON public.addons USING btree (id);
-
-CREATE UNIQUE INDEX addresses_pkey ON public.addresses USING btree (id);
-
 CREATE INDEX addresses_postal_code_idx ON public.addresses USING btree (postal_code);
 
 CREATE INDEX addresses_tenant_id_idx ON public.addresses USING btree (tenant_id);
@@ -292,19 +288,9 @@ CREATE INDEX addresses_user_id_idx ON public.addresses USING btree (user_id);
 
 CREATE UNIQUE INDEX addresses_user_id_key ON public.addresses USING btree (user_id);
 
-CREATE UNIQUE INDEX breed_categories_pkey ON public.breed_categories USING btree (id);
-
 CREATE UNIQUE INDEX breed_categories_tenant_id_name_key ON public.breed_categories USING btree (tenant_id, name);
 
-CREATE UNIQUE INDEX breed_category_breeds_pkey ON public.breed_category_breeds USING btree (id);
-
 CREATE UNIQUE INDEX breed_category_breeds_tenant_id_breed_category_id_breed_nam_key ON public.breed_category_breeds USING btree (tenant_id, breed_category_id, breed_name);
-
-CREATE UNIQUE INDEX customer_packages_pkey ON public.customer_packages USING btree (id);
-
-CREATE UNIQUE INDEX duration_discounts_pkey ON public.duration_discounts USING btree (id);
-
-CREATE UNIQUE INDEX emergency_contact_pkey ON public.emergency_contacts USING btree (id);
 
 CREATE INDEX emergency_contact_tenant_id_idx ON public.emergency_contacts USING btree (tenant_id);
 
@@ -314,69 +300,11 @@ CREATE UNIQUE INDEX emergency_contact_user_id_key ON public.emergency_contacts U
 
 CREATE INDEX idx_time_based_pricing_days ON public.time_based_pricing USING gin (days_of_week);
 
-CREATE UNIQUE INDEX packages_pkey ON public.packages USING btree (id);
-
-CREATE UNIQUE INDEX price_adjustments_pkey ON public.price_adjustments USING btree (id);
-
 CREATE UNIQUE INDEX price_adjustments_pricing_rule_id_size_category_id_breed_ca_key ON public.price_adjustments USING btree (pricing_rule_id, size_category_id, breed_category_id);
-
-CREATE UNIQUE INDEX pricing_rules_pkey ON public.pricing_rules USING btree (id);
-
-CREATE UNIQUE INDEX recurrence_patterns_pkey ON public.recurrence_patterns USING btree (id);
-
-CREATE UNIQUE INDEX reservation_addons_pkey ON public.reservation_addons USING btree (id);
-
-CREATE UNIQUE INDEX reservation_groups_pkey ON public.reservation_groups USING btree (id);
-
-CREATE UNIQUE INDEX reservations_pkey ON public.reservations USING btree (id);
-
-CREATE UNIQUE INDEX service_tiers_pkey ON public.service_tiers USING btree (id);
 
 CREATE UNIQUE INDEX service_tiers_tenant_id_name_key ON public.service_tiers USING btree (tenant_id, name);
 
-CREATE UNIQUE INDEX services_pkey ON public.services USING btree (id);
-
-CREATE UNIQUE INDEX size_categories_pkey ON public.size_categories USING btree (id);
-
 CREATE UNIQUE INDEX size_categories_tenant_id_name_key ON public.size_categories USING btree (tenant_id, name);
-
-CREATE UNIQUE INDEX time_based_pricing_pkey ON public.time_based_pricing USING btree (id);
-
-alter table "public"."addons" add constraint "addons_pkey" PRIMARY KEY using index "addons_pkey";
-
-alter table "public"."addresses" add constraint "addresses_pkey" PRIMARY KEY using index "addresses_pkey";
-
-alter table "public"."breed_categories" add constraint "breed_categories_pkey" PRIMARY KEY using index "breed_categories_pkey";
-
-alter table "public"."breed_category_breeds" add constraint "breed_category_breeds_pkey" PRIMARY KEY using index "breed_category_breeds_pkey";
-
-alter table "public"."customer_packages" add constraint "customer_packages_pkey" PRIMARY KEY using index "customer_packages_pkey";
-
-alter table "public"."duration_discounts" add constraint "duration_discounts_pkey" PRIMARY KEY using index "duration_discounts_pkey";
-
-alter table "public"."emergency_contacts" add constraint "emergency_contact_pkey" PRIMARY KEY using index "emergency_contact_pkey";
-
-alter table "public"."packages" add constraint "packages_pkey" PRIMARY KEY using index "packages_pkey";
-
-alter table "public"."price_adjustments" add constraint "price_adjustments_pkey" PRIMARY KEY using index "price_adjustments_pkey";
-
-alter table "public"."pricing_rules" add constraint "pricing_rules_pkey" PRIMARY KEY using index "pricing_rules_pkey";
-
-alter table "public"."recurrence_patterns" add constraint "recurrence_patterns_pkey" PRIMARY KEY using index "recurrence_patterns_pkey";
-
-alter table "public"."reservation_addons" add constraint "reservation_addons_pkey" PRIMARY KEY using index "reservation_addons_pkey";
-
-alter table "public"."reservation_groups" add constraint "reservation_groups_pkey" PRIMARY KEY using index "reservation_groups_pkey";
-
-alter table "public"."reservations" add constraint "reservations_pkey" PRIMARY KEY using index "reservations_pkey";
-
-alter table "public"."service_tiers" add constraint "service_tiers_pkey" PRIMARY KEY using index "service_tiers_pkey";
-
-alter table "public"."services" add constraint "services_pkey" PRIMARY KEY using index "services_pkey";
-
-alter table "public"."size_categories" add constraint "size_categories_pkey" PRIMARY KEY using index "size_categories_pkey";
-
-alter table "public"."time_based_pricing" add constraint "time_based_pricing_pkey" PRIMARY KEY using index "time_based_pricing_pkey";
 
 alter table "public"."addons" add constraint "addons_service_id_fkey" FOREIGN KEY (service_id) REFERENCES services(id) ON DELETE CASCADE not valid;
 

@@ -22,7 +22,7 @@ $function$
 ;
 
 create table "public"."pet_parents" (
-    "id" integer not null default nextval('pet_parents_id_seq'::regclass),
+    "id" serial primary key,
     "tenant_id" bigint default tenant_id(),
     "pet_id" bigint,
     "user_id" bigint,
@@ -42,7 +42,7 @@ $function$
 ;
 
 create table "public"."pets" (
-    "id" integer not null default nextval('pets_id_seq'::regclass),
+    "id" serial primary key,
     "short_id" text not null generated always as (encode_id('pets'::text, (id)::bigint)) stored,
     "tenant_id" bigint default tenant_id(),
     "name" text not null,
@@ -53,7 +53,7 @@ create table "public"."pets" (
 
 
 create table "public"."tenants" (
-    "id" integer not null default nextval('tenants_id_seq'::regclass),
+    "id" serial primary key,
     "short_id" text not null generated always as (encode_id('tenants'::text, (id)::bigint)) stored,
     "name" text,
     "created_by" uuid default auth.uid(),
@@ -63,7 +63,7 @@ create table "public"."tenants" (
 
 
 create table "public"."users" (
-    "id" integer not null default nextval('users_id_seq'::regclass),
+    "id" serial primary key,
     "short_id" text not null generated always as (encode_id('users'::text, (id)::bigint)) stored,
     "tenant_id" bigint,
     "auth_id" uuid,
@@ -101,18 +101,6 @@ alter sequence "public"."pets_id_seq" owned by "public"."pets"."id";
 alter sequence "public"."tenants_id_seq" owned by "public"."tenants"."id";
 
 alter sequence "public"."users_id_seq" owned by "public"."users"."id";
-
-CREATE UNIQUE INDEX pets_pkey ON public.pets USING btree (id);
-
-CREATE UNIQUE INDEX tenants_pkey ON public.tenants USING btree (id);
-
-CREATE UNIQUE INDEX users_pkey ON public.users USING btree (id);
-
-alter table "public"."pets" add constraint "pets_pkey" PRIMARY KEY using index "pets_pkey";
-
-alter table "public"."tenants" add constraint "tenants_pkey" PRIMARY KEY using index "tenants_pkey";
-
-alter table "public"."users" add constraint "users_pkey" PRIMARY KEY using index "users_pkey";
 
 alter table "public"."pet_parents" add constraint "pet_parents_pet_id_fkey" FOREIGN KEY (pet_id) REFERENCES pets(id) ON DELETE CASCADE not valid;
 

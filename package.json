@@ -8,6 +8,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "reset": "pnpm db:reset && pnpm typesense:reset",
     "db:start": "pnpm dlx supabase@latest --network-id pawfice-net start",
     "db:generate": "mkdirp utils/supabase && pnpm dlx supabase@latest --network-id pawfice-net gen types typescript --local --schema public > utils/supabase/types.ts",
     "db:reset": "tsx --env-file .env.local supabase/seed.ts > supabase/seed.sql && pnpm dlx supabase@latest --network-id pawfice-net db reset",
